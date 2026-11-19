@@ -1,0 +1,42 @@
+{
+  "formatVersion": 1,
+  "id": "name-light-show",
+  "title": "Name Light Show",
+  "pitch": "Make your name light up.",
+  "level": 1,
+  "category": "art",
+  "support": "follow",
+  "sessions": 1,
+  "concepts": ["print", "variables", "strings", "for-loops", "range"],
+  "needs": ["stage"],
+  "phoneFriendly": true,
+  "draft": true,
+  "files": {
+    "starter": "starter.py",
+    "solution": "solution.py"
+  },
+  "milestones": [
+    {
+      "id": "one-light",
+      "title": "Switch on one light",
+      "goal": "A single glowing light on the stage.",
+      "concepts": ["function-calls"],
+      "steps": [
+        {
+          "id": "predict-one-light",
+          "type": "predict",
+          "instruction": "Read these four lines. What do you think will appear on the stage? Make a guess, then press **Run**.",
+          "code": "step-1-predict.py",
+          "check": { "kind": "runs", "description": "Your program ran and drew on the stage." },
+          "hints": [
+            "Look at the line that starts with `stage.circle`.",
+            "`stage.circle(x, y, radius, colour)` draws a circle. x is across, y is down.",
+            "`stage.circle(100, 100, 20, \"mint\")` draws a small mint circle near the top-left corner.",
+            "The circle is at x = 320 and y = ___, so it sits in the ___ of the stage.",
+            "It draws one butter-yellow glowing circle in the middle of the stage (x = 320, y = 200)."
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+/* Night Workshop design tokens (locked 2026-11-19). See docs/HANDOFF.md §7. */
+:root {
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Figtree', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* Dark mode (default) */
+  --bg: #0f1f1c;
+  --surface: #162a26;
+  --tint: #1d3530;
+  --track: #26403a;
+  --line: rgba(245, 236, 220, 0.1);
+  --text: #f5ecdc;
+  --text-soft: #a9b8b0;
+  --accent: #ffd66b;
+  --coral: #ff8a65;
+  --mint: #7be0c3;
+  --blossom: #ffb4d2;
+  --primary-bg: #ffd66b;
+  --primary-fg: #0f1f1c;
+  --stage: #0b1714;
+  --editor-bg: #12241f;
+  --active-line: rgba(245, 236, 220, 0.04);
+  --selection: rgba(255, 214, 107, 0.22);
+  --focus: #ffd66b;
+
+  --syn-text: #f5ecdc;
+  --syn-keyword: #ff8a65;
+  --syn-string: #7be0c3;
+  --syn-function: #ffd66b;
+  --syn-number: #ffb4d2;
+  --syn-comment: #6f857c;
+  --syn-linenum: #4f665e;
+
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --bg: #f5ecdc;
+    --surface: #fffaf1;
+    --tint: #f3e7d0;
+    --track: #e3d7c2;
+    --line: rgba(15, 31, 28, 0.1);
+    --text: #0f1f1c;
+    --text-soft: #52665e;
+    --accent: #8a5a00;
+    --coral: #c9502c;
+    --mint: #13876a;
+    --blossom: #c2457a;
+    --primary-bg: #0f1f1c;
+    --primary-fg: #ffd66b;
+    --editor-bg: #fffaf1;
+    --active-line: rgba(15, 31, 28, 0.035);
+    --selection: rgba(255, 214, 107, 0.35);
+    --focus: #0f1f1c;
+
+    --syn-text: #0f1f1c;
+    --syn-keyword: #c9502c;
+    --syn-string: #13876a;
+    --syn-function: #8a5a00;
+    --syn-number: #c2457a;
+    --syn-comment: #8a978f;
+    --syn-linenum: #b0a898;
+
+    color-scheme: light;
+  }
+}
+
+:root[data-theme='light'] {
+  --bg: #f5ecdc;
+  --surface: #fffaf1;
+  --tint: #f3e7d0;
+  --track: #e3d7c2;
+  --line: rgba(15, 31, 28, 0.1);
+  --text: #0f1f1c;
+  --text-soft: #52665e;
+  --accent: #8a5a00;
+  --coral: #c9502c;
+  --mint: #13876a;
+  --blossom: #c2457a;
+  --primary-bg: #0f1f1c;
+  --primary-fg: #ffd66b;
+  --editor-bg: #fffaf1;
+  --active-line: rgba(15, 31, 28, 0.035);
+  --selection: rgba(255, 214, 107, 0.35);
+  --focus: #0f1f1c;
+
+  --syn-text: #0f1f1c;
+  --syn-keyword: #c9502c;
+  --syn-string: #13876a;
+  --syn-function: #8a5a00;
+  --syn-number: #c2457a;
+  --syn-comment: #8a978f;
+  --syn-linenum: #b0a898;
+
+  color-scheme: light;
+}
