@@ -1,0 +1,32 @@
+{
+  "coordinates": {
+    "title": "x and y: how the stage finds a spot",
+    "lines": [
+      "The stage is like a giant grid of tiny dots: 640 across and 400 down.",
+      "x says how far **across** to go. y says how far **down** to go.",
+      "(0, 0) is the top-left corner, so (320, 200) is right in the middle!"
+    ],
+    "code": "stage.circle(320, 200, 40, \"butter\")",
+    "output": "A butter-yellow circle in the middle of the stage"
+  },
+  "for-loops": {
+    "title": "What's a for loop?",
+    "lines": [
+      "A **for loop** repeats some lines once for every item: every letter in a word, or every number in a list.",
+      "Think of handing out sweets: for each friend in the line, give one sweet. You don't write \"give a sweet\" ten times!",
+      "The lines pushed in with 4 spaces are the ones that repeat."
+    ],
+    "code": "for letter in \"NIX\":\n    print(letter)",
+    "output": "N\nI\nX"
+  },
+  "range": {
+    "title": "What does range() do?",
+    "lines": [
+      "`range(5)` hands Python the numbers 0, 1, 2, 3 and 4. That's 5 numbers.",
+      "Put it in a for loop and the loop runs that many times.",
+      "So `for flash in range(8):` makes your lights flash 8 times!"
+    ],
+    "code": "for i in range(3):\n    print(\"Hip hip hooray!\")",
+    "output": "Hip hip hooray!\nHip hip hooray!\nHip hip hooray!"
+  }
+}

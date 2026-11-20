@@ -1,15 +1,13 @@
 import stage
 
-name = "AARAV"
-gap = 100
-start = (stage.WIDTH - (len(name) - 1) * gap) / 2
+name = "MEERA"
 
-for flash in range(6):
+for flash in range(8):
     stage.background("night")
-    x = start
+    x = 40
     for letter in name:
         color = stage.random_color()
-        stage.circle(x, 200, 40, color, glow=True)
-        stage.text(x, 200, letter, size=44, color="pine", font="serif")
-        x = x + gap
+        stage.circle(x, 200, 26, color, glow=True)
+        stage.text(x, 200, letter, size=32, color="pine", font="serif")
+        x = x + 60
     stage.wait(0.4)

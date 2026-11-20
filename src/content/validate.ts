@@ -14,7 +14,7 @@ const ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
  * Checks a project manifest and the files it references.
  * Returns a list of problems; an empty list means the project is valid.
  */
-export function validateProject(raw: unknown, files: Record<string, string>, folder: string): string[] {
+export function validateProject(raw: unknown, files: Record<string, string>, folder: string, conceptIds?: string[]): string[] {
   const errors: string[] = [];
   const err = (path: string, msg: string) => errors.push(`${folder}: ${path} ${msg}`);
   const isObj = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -88,6 +88,24 @@ export function validateProject(raw: unknown, files: Record<string, string>, fol
       oneOf(s.type, STEP_TYPES, `${sp}.type`);
       str(s.instruction, `${sp}.instruction`);
       if (s.code !== undefined) fileRef(s.code, `${sp}.code`);
+      if (s.introduces !== undefined) {
+        if (!Array.isArray(s.introduces)) err(`${sp}.introduces`, 'must be a list of concept ids');
+        else if (conceptIds)
+          s.introduces.forEach((c: unknown, ci: number) => {
+            if (typeof c !== 'string' || !conceptIds.includes(c)) err(`${sp}.introduces[${ci}]`, `"${String(c)}" is not in content/concepts.json`);
+          });
+      }
+      if (s.type === 'predict' || s.type === 'recall') {
+        if (!Array.isArray(s.choices) || s.choices.length < 2) err(`${sp}.choices`, 'must list at least 2 answers for a predict/recall step');
+        else {
+          s.choices.forEach((c: unknown, ci: number) => str(c, `${sp}.choices[${ci}]`));
+          if (typeof s.answer !== 'number' || s.answer < 0 || s.answer >= s.choices.length) err(`${sp}.answer`, 'must be the index of one of the choices');
+        }
+        str(s.explain, `${sp}.explain`);
+      }
+      if ((s.type === 'build' || s.type === 'fill' || s.type === 'fix' || s.type === 'make-it-yours') && s.check === undefined) {
+        err(`${sp}.check`, `is required for a ${String(s.type)} step`);
+      }
       if (!Array.isArray(s.hints) || s.hints.length !== 5) err(`${sp}.hints`, 'must have exactly 5 hints (the hint ladder)');
       else s.hints.forEach((h: unknown, hi: number) => str(h, `${sp}.hints[${hi}]`));
       if (s.check !== undefined) {
@@ -102,7 +120,10 @@ export function validateProject(raw: unknown, files: Record<string, string>, fol
             err(`${sp}.check.value`, 'is not a valid regular expression');
           }
         }
-        if (s.check.kind === 'python') fileRef(s.check.file, `${sp}.check.file`);
+        if (s.check.kind === 'python') {
+          fileRef(s.check.file, `${sp}.check.file`);
+          if (typeof s.check.file === 'string' && !s.check.file.startsWith('check-')) err(`${sp}.check.file`, 'must start with "check-" (so it is never shown as starter code)');
+        }
       }
     });
   });

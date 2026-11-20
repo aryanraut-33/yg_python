@@ -7,33 +7,267 @@
   "category": "art",
   "support": "follow",
   "sessions": 1,
-  "concepts": ["print", "variables", "strings", "for-loops", "range"],
-  "needs": ["stage"],
+  "concepts": [
+    "function-calls",
+    "coordinates",
+    "variables",
+    "strings",
+    "for-loops",
+    "range"
+  ],
+  "needs": [
+    "stage"
+  ],
   "phoneFriendly": true,
-  "draft": true,
   "files": {
-    "starter": "starter.py",
+    "starter": "step-1-predict.py",
     "solution": "solution.py"
   },
   "milestones": [
     {
       "id": "one-light",
-      "title": "Switch on one light",
-      "goal": "A single glowing light on the stage.",
-      "concepts": ["function-calls"],
+      "title": "Switch on a light",
+      "goal": "A glowing light that you place and colour yourself.",
+      "concepts": [
+        "function-calls",
+        "coordinates"
+      ],
       "steps": [
         {
-          "id": "predict-one-light",
+          "id": "predict-light",
           "type": "predict",
-          "instruction": "Read these four lines. What do you think will appear on the stage? Make a guess, then press **Run**.",
+          "introduces": [
+            "coordinates"
+          ],
+          "instruction": "Read the code in the editor. What do you think will appear on the stage? Pick your guess, then press **Run** to find out.",
           "code": "step-1-predict.py",
-          "check": { "kind": "runs", "description": "Your program ran and drew on the stage." },
+          "choices": [
+            "A glowing yellow circle in the middle of the stage",
+            "A glowing yellow circle in the top-left corner",
+            "A yellow square",
+            "Nothing: the stage stays dark"
+          ],
+          "answer": 0,
+          "explain": "`stage.circle(320, 200, 40, \"butter\", glow=True)` draws a circle. **320** is how far across (x) and **200** is how far down (y). The stage is 640 wide and 400 tall, so (320, 200) is right in the middle.",
+          "check": {
+            "kind": "runs",
+            "description": "Your program ran and lit up the stage."
+          },
           "hints": [
-            "Look at the line that starts with `stage.circle`.",
-            "`stage.circle(x, y, radius, colour)` draws a circle. x is across, y is down.",
-            "`stage.circle(100, 100, 20, \"mint\")` draws a small mint circle near the top-left corner.",
-            "The circle is at x = 320 and y = ___, so it sits in the ___ of the stage.",
-            "It draws one butter-yellow glowing circle in the middle of the stage (x = 320, y = 200)."
+            "Look at the last line, the one that starts with `stage.circle`.",
+            "`stage.circle(x, y, radius, colour)` draws a circle. x is how far across, y is how far down.",
+            "`stage.circle(100, 100, 20, \"mint\")` would draw a small mint circle near the top-left.",
+            "The circle is at x = 320 and y = 200. The stage is 640 wide and 400 tall. So it's in the ______ of the stage.",
+            "It draws one butter-yellow glowing circle in the middle of the stage. Pick that answer and press Run."
+          ]
+        },
+        {
+          "id": "move-light",
+          "type": "build",
+          "instruction": "Move the light to the **left side** of the stage. Change the first number inside `stage.circle(...)` to something smaller, like `100`. Then press **Run**.",
+          "check": {
+            "kind": "python",
+            "file": "check-move-light.py",
+            "description": "Your light moved to the left!"
+          },
+          "hints": [
+            "Look at the line with `stage.circle`. The first number inside the brackets is x.",
+            "x means how far across the stage. Small x is on the left. Big x is on the right.",
+            "`stage.circle(500, 200, 40, \"butter\", glow=True)` would put the light on the right side.",
+            "`stage.circle(___, 200, 40, \"butter\", glow=True)`: fill the blank with a number smaller than 200.",
+            "`stage.circle(100, 200, 40, \"butter\", glow=True)`. Type it yourself, then try a different small number too."
+          ]
+        },
+        {
+          "id": "light-colour",
+          "type": "make-it-yours",
+          "instruction": "Pick your own colour! Change `\"butter\"` to `\"mint\"`, `\"coral\"`, `\"blossom\"`, `\"sky\"` or `\"lilac\"`. Keep the quotes.",
+          "check": {
+            "kind": "python",
+            "file": "check-light-colour.py",
+            "description": "Nice colour!"
+          },
+          "hints": [
+            "The colour is the word in quotes inside `stage.circle(...)`.",
+            "Colour names are text, so they need quotes around them, like `\"mint\"`.",
+            "`stage.circle(100, 200, 40, \"sky\", glow=True)` draws a sky-blue light.",
+            "`stage.circle(100, 200, 40, \"______\", glow=True)`: put a colour name in the quotes.",
+            "`stage.circle(100, 200, 40, \"coral\", glow=True)`. Type it yourself, or pick another colour you like more."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "name-in-lights",
+      "title": "Your name in lights",
+      "goal": "Your own name, glowing on the stage.",
+      "concepts": [
+        "variables",
+        "strings"
+      ],
+      "steps": [
+        {
+          "id": "predict-variable",
+          "type": "predict",
+          "instruction": "New code! Look at `name = \"AARAV\"`, and how the last line uses `name`. What will the stage show?",
+          "code": "step-4-predict.py",
+          "choices": [
+            "The word name, glowing",
+            "AARAV, glowing",
+            "An error, because name has no quotes on the last line"
+          ],
+          "answer": 1,
+          "explain": "`name` is a **variable**: a box with a label. `name = \"AARAV\"` puts the text AARAV in the box. When you write `name` without quotes, Python opens the box and uses what's inside.",
+          "check": {
+            "kind": "runs",
+            "description": "Your program ran."
+          },
+          "hints": [
+            "Look at line 3, `name = \"AARAV\"`, and then at the last line.",
+            "A variable is a labelled box. The `=` puts something into the box.",
+            "If you write `pet = \"Bruno\"` and then use `pet`, Python uses Bruno.",
+            "`name` holds \"_____\", so the stage shows _____.",
+            "It shows AARAV glowing, because `name` holds the text AARAV."
+          ]
+        },
+        {
+          "id": "your-name",
+          "type": "build",
+          "instruction": "Make it **your** name. Change `\"AARAV\"` to your own name (keep the quotes!) and press **Run**. Your name stays on this device.",
+          "check": {
+            "kind": "python",
+            "file": "check-your-name.py",
+            "description": "Your name is in lights!"
+          },
+          "hints": [
+            "Look at line 3: `name = \"AARAV\"`.",
+            "Text in Python goes inside quotes. The quotes tell Python it's words, not code.",
+            "`name = \"Kabir\"` would put Kabir in the name box.",
+            "`name = \"______\"`: your name goes between the quotes.",
+            "`name = \"Meera\"`, but with your own name. Type it yourself."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light-per-letter",
+      "title": "A light for every letter",
+      "goal": "Each letter of your name in its own glowing light.",
+      "concepts": [
+        "for-loops"
+      ],
+      "steps": [
+        {
+          "id": "predict-loop",
+          "type": "predict",
+          "introduces": [
+            "for-loops"
+          ],
+          "instruction": "This code has a **for loop**. What do you think it will print in the Output box?",
+          "code": "step-6-predict.py",
+          "choices": [
+            "Your whole name, printed once",
+            "Each letter of your name on its own line",
+            "The word letter, printed again and again"
+          ],
+          "answer": 1,
+          "explain": "A `for` loop repeats the indented lines once for each letter. Each time round, `letter` holds the next letter of your name, so `print(letter)` prints one letter per line.",
+          "check": {
+            "kind": "runs",
+            "description": "Your loop ran."
+          },
+          "hints": [
+            "Look at the line `for letter in name:` and the line under it.",
+            "A for loop repeats the indented lines, once for each item.",
+            "`for animal in [\"cat\", \"dog\"]:` with `print(animal)` inside prints cat, then dog.",
+            "Each time round, `letter` is one ______ of your name.",
+            "It prints each letter of your name on its own line."
+          ]
+        },
+        {
+          "id": "spread-lights",
+          "type": "build",
+          "instruction": "Press **Run** first. Every light is drawn in the same spot, all on top of each other! Add this line **inside the loop**, lined up under `stage.text`, so each light moves along: `x = x + 60`",
+          "code": "step-7-build.py",
+          "check": {
+            "kind": "python",
+            "file": "check-spread.py",
+            "description": "Every letter has its own light!"
+          },
+          "hints": [
+            "Look at the loop. What changes each time round? Right now nothing changes x, so every light lands in the same spot.",
+            "Lines inside a loop have 4 spaces in front. A new line with the same 4 spaces runs every time round.",
+            "This draws three stars in a row:\n`for star in range(3):`\n`    stage.circle(x, 100, 10, \"sky\")`\n`    x = x + 50`",
+            "Add `x = x + __` as the last line inside the loop, with 4 spaces in front.",
+            "Add `    x = x + 60` under the `stage.text` line, lined up with it. Type it yourself."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light-show",
+      "title": "Light show!",
+      "goal": "Your name flashing in new colours, again and again.",
+      "concepts": [
+        "range",
+        "for-loops"
+      ],
+      "steps": [
+        {
+          "id": "flashing",
+          "type": "fill",
+          "introduces": [
+            "range"
+          ],
+          "instruction": "Time for the show! The big loop flashes your lights again and again, with new random colours each time. Replace `___` with how many flashes you want (try `8`) and press **Run**.",
+          "code": "step-8-fill.py",
+          "check": {
+            "kind": "python",
+            "file": "check-flash.py",
+            "description": "It's a light show!"
+          },
+          "hints": [
+            "Look at line 5: `for flash in range(___):`.",
+            "`range(5)` makes a loop go round 5 times.",
+            "`for jump in range(3):` repeats the indented lines 3 times.",
+            "`for flash in range(_):`: put a number of 3 or more in the brackets.",
+            "`for flash in range(8):`. Type it yourself."
+          ]
+        },
+        {
+          "id": "make-it-yours",
+          "type": "make-it-yours",
+          "instruction": "Make it yours! Change at least one thing: the speed (the number in `stage.wait`), the number of flashes, the size of the lights (`26`) or the background colour (`\"night\"`). Then press **Run**.",
+          "check": {
+            "kind": "python",
+            "file": "check-make-it-yours.py",
+            "description": "That's your very own light show!"
+          },
+          "hints": [
+            "Look for the numbers and colour names. Each one changes something about the show.",
+            "`stage.wait(0.4)` waits 0.4 seconds between flashes. Smaller is faster.",
+            "`stage.wait(0.1)` makes a super-fast show. `stage.background(\"pine\")` changes the background.",
+            "Try `stage.wait(___)` with a different number, like 0.2.",
+            "Change `stage.wait(0.4)` to `stage.wait(0.15)` for a fast show. Type it yourself."
+          ]
+        },
+        {
+          "id": "recall-loop",
+          "type": "recall",
+          "instruction": "Quick question before you finish: what does a `for` loop do?",
+          "choices": [
+            "It makes the program run faster",
+            "It repeats the indented lines, once for each item",
+            "It draws a circle on the stage"
+          ],
+          "answer": 1,
+          "explain": "A `for` loop repeats the lines indented under it, once for each item: each letter in a name, or each number in `range(8)`. You used two loops in your light show!",
+          "hints": [
+            "Think about what happened in your light show.",
+            "One loop gave each letter a light. Another loop flashed the lights again and again.",
+            "`for flash in range(8):` ran its lines 8 times.",
+            "A for loop ______ the indented lines.",
+            "It repeats the indented lines, once for each item."
           ]
         }
       ]

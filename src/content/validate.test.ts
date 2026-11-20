@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vitest';
 import { validateProject } from './validate';
 
 const root = join(__dirname, '..', '..', 'content', 'projects');
+const glossary = JSON.parse(readFileSync(join(__dirname, '..', '..', 'content', 'concepts.json'), 'utf8')) as Record<string, { title: string; lines: string[]; code: string; output: string }>;
+const conceptIds = Object.keys(glossary);
 const folders = readdirSync(root).filter((f) => statSync(join(root, f)).isDirectory());
 
 function load(folder: string) {
@@ -21,7 +23,20 @@ describe('content/projects', () => {
   for (const folder of folders) {
     it(`${folder} is a valid project`, () => {
       const { manifest, files } = load(folder);
-      expect(validateProject(manifest, files, folder)).toEqual([]);
+      expect(validateProject(manifest, files, folder, conceptIds)).toEqual([]);
+    });
+  }
+});
+
+describe('content/concepts.json', () => {
+  for (const [id, c] of Object.entries(glossary)) {
+    it(`${id} has a title, 2-4 short lines, an example and its output`, () => {
+      expect(c.title.length).toBeGreaterThan(0);
+      expect(c.lines.length).toBeGreaterThanOrEqual(2);
+      expect(c.lines.length).toBeLessThanOrEqual(4);
+      for (const l of c.lines) expect(l.length).toBeLessThan(170);
+      expect(c.code.length).toBeGreaterThan(0);
+      expect(c.output.length).toBeGreaterThan(0);
     });
   }
 });

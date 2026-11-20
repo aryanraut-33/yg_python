@@ -45,10 +45,24 @@ export interface Check {
 export interface Step {
   id: string;
   type: StepType;
-  /** Instruction shown to the child (short Markdown). */
+  /** Instruction shown to the child (short Markdown: **bold**, `code`). */
   instruction: string;
-  /** For predict/fill/fix/parsons: a .py file with the code this step starts from. */
+  /**
+   * A .py file with the code this step starts from. Without it, the child keeps
+   * their code from the previous step. `{{name}}` is replaced with a remembered value.
+   */
   code?: string;
+  /**
+   * Concept ids (from content/concepts.json) this step introduces for the first time.
+   * The workspace pops out Nix's explanation the first time the child reaches the step.
+   */
+  introduces?: string[];
+  /** For predict and recall steps: the answers to choose from. */
+  choices?: string[];
+  /** Index into `choices` of the right answer. */
+  answer?: number;
+  /** Shown after a predict/recall answer, whether it was right or not. */
+  explain?: string;
   check?: Check;
   /** The 5-level hint ladder: where to look, concept reminder, worked example, solution with blanks, full solution. */
   hints: [string, string, string, string, string];
@@ -91,4 +105,15 @@ export interface LoadedProject {
   manifest: ProjectManifest;
   /** Every .py file in the project folder, keyed by file name. */
   files: Record<string, string>;
+}
+
+/** content/concepts.json: plain-language explanations Nix gives when a concept first appears. */
+export interface ConceptIntro {
+  title: string;
+  /** Nix's lines, short and spoken. `code` and **bold** allowed. */
+  lines: string[];
+  /** A tiny example. */
+  code: string;
+  /** What the example shows. */
+  output: string;
 }
