@@ -6,3 +6,8 @@ public/pyodide/
 *.log
 .playwright-mcp/
 *.tsbuildinfo
+__pycache__/
+assets/mascot/**/*.zip
+assets/mascot/nix/yg_python_mascots/
+assets/mascot/riff/yg_python_tiger_mascots/
+/image.png
