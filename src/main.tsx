@@ -8,6 +8,7 @@ import '@fontsource/figtree/600.css';
 import '@fontsource/jetbrains-mono/400.css';
 import './ui/tokens.css';
 import './ui/app.css';
+import './ui/led.css';
 import { App } from './App';
 import { initTheme } from './ui/theme';
 
