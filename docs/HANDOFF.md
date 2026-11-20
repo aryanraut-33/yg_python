@@ -391,3 +391,132 @@ The full catalogue is in [project-catalogue.md](project-catalogue.md). It covers
   | 2M-line print flood | page stayed responsive |
 
 - **For Phase 1, the user wants the full 10-slide animated hero carousel** (answered 2026-11-20), not a simplified landing page.
+
+### Phase 1 (Hook and starter): built 2026-11-20
+
+- **Landing (`/`):** the full animated carousel, 11 slides. Name Light Show was added as slide 1 by the user's choice; only it is live, and the other 10 show "Coming soon".
+  - Scenes are SVG plus CSS animation (`src/landing/scenes.ts`, `landing.css`).
+  - Behaviour: auto-advance every 6 s; pause on hover, focus or hidden tab; reduced motion means a crossfade with no motion; dots plus a pause button; ←/→ keys and swipe.
+  - Python preloads after 2.5 s unless the visitor's browser is in save-data mode.
+- **Sandbox (`/play/name-light-show`):** intro (the finished light show plays as a preview), then 4 milestones and 10 steps, then the finish screen.
+  - Step types: predict (pick a guess, then run), build/fill with behaviour checks, make-it-yours, recall.
+  - The kid's name is remembered (`check.remember`) and filled into later steps via `{{name}}`.
+  - Progress is saved in localStorage per project. Another tab changing it triggers a reload.
+- **Checks** run in Python after the kid's code (`_yg_run(code, check_json)`). They see `output`, `drawn` (the stage history), `ns`, `fail()` and `remember`. `npm run test:checks` validates them in local CPython.
+- **Error translator v0:** 26 patterns plus a fallback, all tested. "Did you mean" suggestions are computed in Python (difflib over the kid's own names). The error line is highlighted in the editor.
+- **On-device report (`/report`, hidden):**
+  - Gate cards: finished alone (no level-5 answer hint) and first run within 3 minutes.
+  - A per-kid table, with "Copy as table" and "Reset for the next kid".
+  - The data never leaves the browser.
+- **Content format additions:** `choices`, `answer`, `explain` (for predict and recall steps), `{{name}}` templating, and check files named `check-*.py`.
+- **Known gaps:**
+  - The phone layout works, but creating on a phone is Phase 5.
+  - Nav links other than "Start building" were left out, because those pages don't exist yet.
+  - The scenes' code labels and names are placeholders, such as "AARAV".
+
+### Pre-project onboarding with Nix and Riff: built 2026-11-20
+
+- **Decisions (user, 2026-11-20):**
+  - Onboarding stays aimed at **ages 10–14**. The brief said 7–15; Decision 2 holds.
+  - The sequence follows the brief **as written**, so the first Run comes around minute 10. This replaces "projects from minute one" for beginners.
+  - As a result, the Phase 1 "run code within 3 minutes" gate needs a new target. The report flags this.
+- **Route `/start`.** The landing buttons send kids who haven't finished onboarding here; after that they go straight to `/play/name-light-show`. The project intro links back to it.
+- **Six chapters** (`src/onboarding/script.ts`):
+  1. **Meet Nix & Riff:** name or nickname (kept on the device), "Written Python before?", and an optional 7-question quick check for kids who say yes. Correct answers make those lessons optional; age is never used.
+  2. **Meet Python:** sandwich ordering, hello in human languages vs Python, Python vs Java, a quiz. Skippable.
+  3. **Python in the wild:** 6 fact cards, a matching game, a dream-project pick. Skippable.
+  4. **Speak Python:** 7 lessons in `concepts.ts`, each following the six parts (analogy → example → tap each part → try it and run → see the result → challenge with check and hints). Challenge checks live in `content/onboarding/check-*.py` and are tested by `npm run test:checks`.
+  5. **Workspace tour** (`WorkspaceTour.tsx`): 11 hands-on steps in the real workspace layout. The kid clicks, types `print("Hello, World!")`, runs, fixes a deliberate missing `)`, uses a hint, and sees the stage and progress.
+  6. **Finale** → Name Light Show.
+- **Mascots:**
+  - Poses come from `assets/mascot/` (the user's art), trimmed to WebP in `public/mascots/` (about 40 KB each).
+  - Nix is the explainer and question-asker; Riff is the energy and the cheerleader, and reacts to mistakes.
+  - Riff has no "surprised" pose and Nix has no "pointing" pose; `mascots.tsx` falls back to the nearest pose.
+- **Reuses:** the shared Python runner (`useCodeRun`), CodeEditor, Console, the error translator, the checks engine and the sandbox styles. Progress is saved in `yg-onboarding-v1` (localStorage); "Reset for the next kid" clears it.
+- **Report:** a new Onboarding column (done in N minutes, or where the kid stopped, plus chapters skipped and quick-check score), and a gate card for onboarding completion with the median time.
+
+### Revision, 2026-11-20 (the user's 6 changes)
+
+1. **Carousel slide transition** is 0.35 s (was 0.6 s). Slides still change every 6 s.
+2. **"New idea" pop-outs.** Steps can list `introduces: [conceptId]`, and Nix explains each concept in a pop-out the first time the kid reaches that step. The kid can reopen it from a chip on the step card.
+   - Explanations live in `content/concepts.json`: coordinates, for-loops and range so far. The validator and tests check them.
+   - Name Light Show introduces coordinates (step 1), for-loops (step 6) and range (step 8).
+3. **The hero now explains the platform.**
+   - Fixed: the eyebrow "Real Python for kids aged 9–15", a sentence saying what yg python is, a "Start learning free" button and a "See how it works" link.
+   - Rotating: the headline, the "You could build ___" tag and the scene.
+   - The per-slide "Coming soon" buttons are gone.
+4. **Home page sections below the hero** (`LandingSections.tsx`, all using the mascots):
+   - How it works (3 steps);
+   - Meet your guides;
+   - Real Python in your browser (with a code sample);
+   - Projects grid, with id `#projects`;
+   - For parents, with id `#parents`;
+   - a closing call to action and a footer.
+
+   The nav links now jump to these sections.
+5. **Dialogue buttons** (Next, plus the screen's main button) sit to the right of the conversation, stacked.
+6. **The experience question has two answers:** "Never" or "Yes, a bit".
+   - "Yes, a bit" leads to an 11-question quick check: the 7 basics plus 4 "spot the error" questions, with shuffled choices and an "I'm not sure" option.
+   - Tracks (`trackFor` in `onboarding/progress.ts`):
+
+     | Score | Track | What happens |
+     |---|---|---|
+     | under 30% | Lessons | The full journey |
+     | 30% to under 85% | Refresher | Refresher → workspace tour → project. The user gave 30–75% and >85%; I put the 75–85% gap with the refresher. |
+     | 85% or more | Ready | Choose: straight to the project, a refresher first, or the workspace tour first |
+
+   - The refresher (`Refresher.tsx`) shows all 7 basics with runnable examples, missed ones first, plus an errors reminder and one mini challenge (`input` and `print`).
+   - Paths come from `pathFor()` in `onboarding/script.ts`; the chapter map only shows the chapters on the kid's path.
+
+### Home page redesign: "LED board" direction (user-approved 2026-11-20)
+
+The user rejected the rounded-card look as generic "AI slop", and `DESIGN_RULES.md` already forbids excessive rounded cards. The new direction applies to the home page now; **onboarding, lessons and the workspace come next round, in the same language.**
+
+- **Language:** dot-matrix and LED display meets workshop.
+  - Sharp corners everywhere (`border-radius: 0`).
+  - 1 px hairline rules (`--line-strong`) instead of boxes.
+  - Monospace uppercase labels in `[ brackets ]`, with oversized Instrument Serif headlines.
+  - Square LED indicators that blink green when something is live.
+  - Hard-shadow push buttons (`.led-btn`): cream shadow in dark mode, butter in light; they press in on click.
+  - Colours and fonts are unchanged (locked tokens).
+- **Bezel:** a fixed 16 px frame in the opposite mode's background (8 px on phones) borders the **whole page**, not just the hero.
+- **Pixel field** (`fx.tsx`): a fixed canvas of LED dots across the page. Moving the mouse or a finger spawns coloured pixels that snap to the dot grid, drift with the motion and fade, with occasional idle blips. It's off with reduced motion and capped at 520 particles.
+- **Haptics** (`buzz()` in `fx.tsx`): short vibrations on button presses, slide swipes, section reveals and the departure board settling. They only work on touch devices after the first tap, and are skipped with reduced motion. iPhones ignore the vibrate API, so it's Android only.
+- **Hero:** slide 1 is the **platform intro** (no project): "Learn Python by building things you love.", with pixel-art icons and Nix and Riff. Slides 2 to 12 are the projects. Each slide has an eyebrow (`[ Project 04 · Robots ]`), headline, sub, "Start learning free" button and a status LED. Controls are square dots, an `01 / 12` counter and a square pause button. Scenes no longer draw star-chart backgrounds, because the dot field replaces them.
+- **Sections** (`LandingSections.tsx`), each with a dot-matrix number, a mono label and a rule that draws in on scroll:
+  1. How it works: 3 columns split by hairlines, with mascots rising from the rule.
+  2. Guides: two halves, with terminal-style quote lines.
+  3. Real Python: a typing code block beside a live LED light-show output, plus 3 facts.
+  4. Projects: a departure board with split-flap category and status.
+  5. Parents: a 2 × 2 grid with P/01-style numbers.
+  6. A large "Ready to make something?" call to action, with mascots rising.
+- **Class names:** home page classes are namespaced where they could collide (e.g. `.lp-guide`, because the sandbox already has `.guide`).
+- **Onboarding:** dialogue buttons now sit outside the cast box at the bottom right, stacked (`.ob-btn-stack`).
+
+### Round 3 (2026-11-20): catalogue page, sticky nav, app restyle
+
+- **Hero** rotates the intro plus **Mars Rover Rescue, Drone Delivery, Chandrayaan Lander and Invisible Cloak** (`HERO_KEYS` in `landing/slides.ts`).
+  - The slide controls are replaced by a small **scroll indicator**: an LED square stepping down a track, which fades out once you scroll.
+  - A tiny square **pause button** stays in the corner, because WCAG 2.2.2 requires a way to pause auto-rotation.
+- **Sticky site nav** (`ui/SiteNav.tsx`) on the home and catalogue pages. "Projects" jumps to the home page's projects section.
+- **Home projects section** shows 8 featured projects as a departure board (every row links to that project's catalogue entry; the live one starts the project) plus an **"All projects catalogue"** button.
+- **`/projects` catalogue** (`catalogue/Catalogue.tsx`) lists all 26 projects:
+  - The data is generated from `docs/project-catalogue.md` by `python3 scripts/build-catalogue.py` into `src/catalogue/data.ts`. **Edit the markdown, then rerun the script.**
+  - Projects are grouped by level, with dot-matrix level numbers and the level's new Python ideas.
+  - The hairline-grid project sheets expand to show the wow moment, steps, show-off hook and needs.
+  - Filters: level (segmented control), category and search. Deep links (`/projects#doodle-guesser`) open and highlight a project.
+  - Featured and live flags live in the script (`FEATURED`, `LIVE`).
+- **Whole-app LED language** (`ui/led.css`, loaded globally):
+  - every page sits in the bezel through the `.shell` wrapper in `App.tsx`;
+  - corner radii are 0 everywhere;
+  - `.btn-primary` and `.btn-stop` are hard-shadow push buttons;
+  - labels use mono uppercase;
+  - speech bubbles have coloured side bars;
+  - hairlines use `--line-strong`.
+- **Pixel field** runs on the home, catalogue, onboarding and report pages, but not in the coding workspace or playground (it would distract). It **calms down near anything clickable**: no new pixels within about 26 px of a button, link, input or editor, and the nearby trail fades fast (`nearInteractive` in `ui/fx.tsx`).
+- **Workspace** is exactly one screen tall on desktop (≥1181 px); panels scroll inside.
+
+- **Home section 02 is now "Laptop or phone"** (2026-11-20); it replaced "Your guides".
+  - Laptop or Chromebook is marked **Recommended**, with Riff's coding pose.
+  - Phone or tablet is marked **Also works**, with Nix's new `mobile` pose (`public/mascots/nix/mobile.webp`, from `assets/mascot/nix/14_nix_mobile.png`).
+  - "How it works" step 2 now uses Riff's pointing pose, so the coding pose isn't shown twice.

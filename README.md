@@ -4,7 +4,15 @@ A build-first Python learning platform for kids aged 10–14. Python runs **in t
 
 Start with [docs/HANDOFF.md](docs/HANDOFF.md) for every product and design decision.
 
-**Status:** Phase 0 (Foundations) is built. The app is currently a developer playground for checking the runtime.
+**Status:** Phase 1 (Hook and starter) is built.
+
+| Page | What it is |
+|---|---|
+| `/` | Landing page: animated 11-slide project carousel (only Name Light Show is playable). First-timers' buttons lead to `/start` |
+| `/start` | Onboarding with Nix and Riff: 6 chapters, 7 Speak Python lessons and a hands-on workspace tour, then into the first project |
+| `/play/name-light-show` | Guest sandbox: the starter project, 4 milestones and 10 steps, with checks, a 5-level hint ladder and kid-language errors |
+| `/report` | Hidden observer report: on-device session log and the Phase 1 gate numbers |
+| `/playground` | Developer playground for runtime checks (from Phase 0) |
 
 ## Run it
 
@@ -13,7 +21,8 @@ Requires Node 22+.
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm test           # validates every project in content/
+npm test           # validates every project in content/ and the error translator
+npm run test:checks  # runs every step's behaviour check in local Python (start code must fail, answers must pass)
 npm run build      # type-check and build into dist/
 npm run preview    # serve the production build at http://localhost:4173
 ```
@@ -52,9 +61,17 @@ src/
 ├── stage/StageRenderer.ts  # draws stage commands on a canvas
 ├── editor/                 # CodeMirror 6 editor + Night Workshop theme
 ├── content/                # project file format: types, validator, loader
+├── errors/translate.ts     # error translator v0 (26 patterns, kid language)
+├── landing/                # hero carousel: slides, SVG scenes, animations
+├── onboarding/             # /start: script, lessons (concepts.ts), widgets, workspace tour, mascots
+├── sandbox/                # guided project workspace: Guide, progress (saved on device)
+├── report/                 # hidden /report page
+├── telemetry/sessionLog.ts # on-device session log (never leaves the browser)
 ├── ui/                     # tokens.css (design tokens), layout, console, icons
 └── samples.ts              # playground sample programs
 content/projects/<id>/      # projects as files (see content/README.md)
+content/onboarding/         # behaviour checks for the Speak Python challenges
+public/mascots/{nix,riff}/  # mascot poses (WebP, made from assets/mascot/)
 ```
 
 ### How Stop works
