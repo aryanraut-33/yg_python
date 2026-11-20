@@ -1,0 +1,346 @@
+/* ============================================================
+   LED board design language, shared by every page
+   (approved 2026-11-20; see docs/HANDOFF.md).
+   Sharp corners, hairline rules, monospace labels, LED indicators,
+   hard-shadow push buttons, a bezel around the whole site.
+   ============================================================ */
+
+:root {
+  --bezel: 16px;
+  --line-strong: color-mix(in srgb, var(--text) 26%, transparent);
+  --btn-shadow: var(--text);
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-pill: 0px;
+}
+:root[data-theme='light'] {
+  --btn-shadow: #ebb84a;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --btn-shadow: #ebb84a;
+  }
+}
+@media (max-width: 640px) {
+  :root {
+    --bezel: 8px;
+  }
+}
+
+/* ---------- Shell: the bezel frames every page ---------- */
+.shell {
+  min-height: 100vh;
+  padding: var(--bezel);
+}
+.bezel {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  border: var(--bezel) solid var(--frame);
+  pointer-events: none;
+}
+.pixel-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.pixel-field canvas {
+  position: absolute;
+  inset: 0;
+}
+/* Page content sits above the pixel field. */
+.shell > :not(.pixel-field):not(.bezel) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Primitives ---------- */
+.label,
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+.led {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--text-soft);
+  opacity: 0.6;
+}
+.is-live .led,
+.led.on {
+  background: var(--mint);
+  opacity: 1;
+  box-shadow: 0 0 10px var(--mint);
+  animation: led-blink 1.6s steps(1, end) infinite;
+}
+@keyframes led-blink {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.led-btn,
+.btn-primary,
+.btn-stop {
+  box-shadow: 4px 4px 0 0 var(--btn-shadow);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+}
+.led-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 24px;
+  border: 0;
+  border-radius: 0;
+  background: var(--primary-bg);
+  color: var(--primary-fg);
+  font: 600 16px/1 var(--font-sans);
+  text-decoration: none;
+  box-shadow: 5px 5px 0 0 var(--btn-shadow);
+  cursor: pointer;
+}
+.led-btn:hover,
+.btn-primary:hover:not(:disabled),
+.btn-stop:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--btn-shadow);
+}
+.led-btn:active,
+.btn-primary:active:not(:disabled),
+.btn-stop:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 0 var(--btn-shadow);
+}
+.btn-primary:disabled {
+  box-shadow: none;
+}
+.led-btn-sm {
+  padding: 10px 14px;
+  font-size: 14px;
+  box-shadow: 3px 3px 0 0 var(--btn-shadow);
+}
+.led-btn-lg {
+  padding: 20px 32px;
+  font-size: 19px;
+}
+
+.sq-btn,
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+.sq-btn:hover,
+.icon-btn:hover {
+  border-color: var(--text);
+}
+
+.mono-link {
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: 3px;
+}
+.mono-link:hover {
+  border-color: var(--text);
+}
+
+.status-led {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+.dot-number rect {
+  fill: var(--text);
+  transition: fill 0.2s ease, opacity 0.2s ease;
+}
+.dot-number rect.off {
+  opacity: 0.07;
+}
+.dot-number rect.on {
+  opacity: 0.16;
+}
+.dot-number.lit rect.on {
+  fill: var(--accent);
+  opacity: 1;
+}
+
+/* ---------- Site nav (sticky on the marketing pages) ---------- */
+.site-nav {
+  position: sticky;
+  top: var(--bezel);
+  z-index: 40;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 28px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line-strong);
+}
+.site-nav .wordmark {
+  color: var(--text);
+  text-decoration: none;
+}
+.site-links {
+  display: flex;
+  gap: 28px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.site-links a {
+  color: var(--text-soft);
+  text-decoration: none;
+}
+.site-links a:hover,
+.site-links a[aria-current='page'] {
+  color: var(--text);
+}
+.site-links span {
+  color: var(--accent);
+  margin-right: 4px;
+}
+.site-nav-right {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+@media (max-width: 1000px) {
+  .site-nav {
+    grid-template-columns: 1fr auto;
+    padding: 12px 16px;
+  }
+  .site-links {
+    display: none;
+  }
+}
+
+/* ============================================================
+   App components restyled in the LED language
+   ============================================================ */
+.btn {
+  border-radius: 0 !important;
+}
+.btn-ghost {
+  border: 1px solid var(--line-strong) !important;
+}
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--text) !important;
+}
+.btn-stop {
+  box-shadow: 4px 4px 0 0 var(--btn-shadow);
+}
+.panel {
+  border-radius: 0 !important;
+  border-color: var(--line-strong) !important;
+}
+.panel-head {
+  border-color: var(--line-strong) !important;
+}
+.panel-title,
+.file-tab,
+.tag,
+.status,
+.guide-eyebrow,
+.step-kind,
+.ob-eyebrow,
+.ob-label,
+.ob-lesson-tag,
+.bubble-name,
+.hint-label,
+.coach-name,
+.coach-step,
+.pop-eyebrow,
+.pop-label,
+.track-label,
+.sb-save-note,
+.lesson-steps li,
+.qc-pct {
+  font-family: var(--font-mono) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase;
+}
+.status {
+  border-radius: 0 !important;
+  font-size: 11.5px !important;
+}
+.status-dot,
+.choice-dot,
+.cm-dot,
+.intro-chip-dot {
+  border-radius: 0 !important;
+}
+
+/* Hairlines strong enough to read as structure, not decoration. */
+.ob-card,
+.ob-cast,
+.choice,
+.ob-option,
+.match-item,
+.dream-item,
+.hello-card,
+.sw-card,
+.hint-card,
+.error-card,
+.recap-card,
+.pop,
+.coach-bubble,
+.gate-card,
+.report-table-wrap,
+.mini-editor {
+  border-color: var(--line-strong) !important;
+}
+
+/* Speech: square bubbles with the speaker's colour as a side bar. */
+.bubble {
+  border-left: 3px solid var(--nix, #b9a8ff);
+}
+.bubble-riff {
+  border-left: 0;
+  border-right: 3px solid var(--riff, #ff8a65);
+}
+.pop-line {
+  border-left: 3px solid #b9a8ff;
+}
+
+/* Chapter map + step track read as LED segments. */
+.chapter-map li + li::before {
+  height: 1px;
+  background: var(--line-strong);
+}
+.track-dot {
+  height: 6px !important;
+}
+.code-part {
+  border-radius: 0 !important;
+}

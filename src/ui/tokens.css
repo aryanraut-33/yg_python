@@ -28,6 +28,11 @@
   --active-line: rgba(245, 236, 220, 0.04);
   --selection: rgba(255, 214, 107, 0.22);
   --focus: #ffd66b;
+  --error-line: rgba(255, 138, 101, 0.12);
+  --success: #7be0c3;
+  --success-bg: rgba(123, 224, 195, 0.12);
+  --notice-bg: rgba(255, 214, 107, 0.12);
+  --frame: #f5ecdc;
 
   --syn-text: #f5ecdc;
   --syn-keyword: #ff8a65;
@@ -59,6 +64,11 @@
     --active-line: rgba(15, 31, 28, 0.035);
     --selection: rgba(255, 214, 107, 0.35);
     --focus: #0f1f1c;
+    --error-line: rgba(201, 80, 44, 0.1);
+    --success: #13876a;
+    --success-bg: rgba(19, 135, 106, 0.1);
+    --notice-bg: rgba(235, 184, 74, 0.18);
+    --frame: #0f1f1c;
 
     --syn-text: #0f1f1c;
     --syn-keyword: #c9502c;
@@ -90,6 +100,11 @@
   --active-line: rgba(15, 31, 28, 0.035);
   --selection: rgba(255, 214, 107, 0.35);
   --focus: #0f1f1c;
+  --error-line: rgba(201, 80, 44, 0.1);
+  --success: #13876a;
+  --success-bg: rgba(19, 135, 106, 0.1);
+  --notice-bg: rgba(235, 184, 74, 0.18);
+  --frame: #0f1f1c;
 
   --syn-text: #0f1f1c;
   --syn-keyword: #c9502c;
