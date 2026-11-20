@@ -53,12 +53,22 @@ _FONTS = ("sans", "serif", "mono")
 _ALIGNS = ("left", "center", "right")
 _MAX_BATCH = 2000
 
+_MAX_HISTORY = 20000
+
 _batch = []
 _background = COLORS["night"]
+# Everything drawn during this run, for behaviour checks.
+_history = []
+
+
+def _record(command):
+    if len(_history) < _MAX_HISTORY:
+        _history.append(command)
 
 
 def _push(command):
     _batch.append(command)
+    _record(command)
     if len(_batch) >= _MAX_BATCH:
         flush()
 
@@ -106,6 +116,7 @@ def _discard():
 def _reset():
     global _batch, _background
     _batch = []
+    _history.clear()
     _background = COLORS["night"]
     _push(["bg", _background])
 
@@ -183,6 +194,7 @@ def wait(seconds):
     seconds = _num("seconds", seconds)
     if seconds < 0:
         raise ValueError("wait() needs a number of seconds that is 0 or more")
+    _record(["wait", seconds])
     flush()
     _yg.sleep(seconds)
 

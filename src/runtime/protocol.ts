@@ -22,9 +22,26 @@ export interface SharedBuffers {
   stdin: SharedArrayBuffer;
 }
 
+/** A behaviour check to run after the child's code (see content/README.md). */
+export interface CheckSpec {
+  kind: 'runs' | 'output-contains' | 'output-matches' | 'python';
+  value?: string;
+  /** Python source for kind "python". */
+  code?: string;
+  description: string;
+}
+
+export interface CheckResult {
+  passed: boolean;
+  /** Kid-language message: what passed, or what's still missing. */
+  message: string;
+  /** Values a passing check asked to keep for later steps, e.g. { name: "Meera" }. */
+  remember?: Record<string, string>;
+}
+
 export type MainToWorker =
   | { type: 'init'; buffers: SharedBuffers | null }
-  | { type: 'run'; runId: number; code: string };
+  | { type: 'run'; runId: number; code: string; check: CheckSpec | null };
 
 export interface PythonErrorInfo {
   /** Python exception class name, e.g. "NameError". */
@@ -34,6 +51,12 @@ export interface PythonErrorInfo {
   line: number | null;
   /** Traceback trimmed to the child's own code. */
   traceback: string;
+  /** For NameError / AttributeError: the unknown name. */
+  name?: string | null;
+  /** A close match from the child's own names, e.g. "score" for "scroe". */
+  suggestion?: string | null;
+  /** True when the error came from inside the stage library (bad argument), not Python itself. */
+  fromStage?: boolean;
 }
 
 export interface LoadMetrics {
@@ -60,5 +83,6 @@ export type WorkerToMain =
       ok: boolean;
       stopped: boolean;
       error: PythonErrorInfo | null;
+      check: CheckResult | null;
       ms: number;
     };

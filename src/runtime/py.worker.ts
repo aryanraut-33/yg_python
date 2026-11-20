@@ -1,6 +1,14 @@
 // Runs the child's Python in a Web Worker, so a busy program never freezes the page.
 import type { PyodideAPI } from 'pyodide';
-import { CTL, type LoadMetrics, type MainToWorker, type PythonErrorInfo, type WorkerToMain } from './protocol';
+import {
+  CTL,
+  type CheckResult,
+  type CheckSpec,
+  type LoadMetrics,
+  type MainToWorker,
+  type PythonErrorInfo,
+  type WorkerToMain,
+} from './protocol';
 import bootstrapPy from './python/bootstrap.py?raw';
 import stagePy from './python/stage.py?raw';
 
@@ -145,20 +153,21 @@ async function init(buffers: Extract<MainToWorker, { type: 'init' }>['buffers'])
   });
 }
 
-function run(runId: number, code: string) {
+function run(runId: number, code: string, check: CheckSpec | null) {
   if (!py) return;
   if (control) Atomics.store(control, CTL.STOP_REQUESTED, 0);
   if (interrupt) interrupt[0] = 0;
   const t0 = performance.now();
-  const runner = py.globals.get('_yg_run') as (src: string) => string;
-  let parsed: { ok: boolean; stopped: boolean; error: PythonErrorInfo | null };
+  const runner = py.globals.get('_yg_run') as (src: string, checkJson: string | null) => string;
+  let parsed: { ok: boolean; stopped: boolean; error: PythonErrorInfo | null; check: CheckResult | null };
   try {
-    parsed = JSON.parse(runner(code));
+    parsed = JSON.parse(runner(code, check ? JSON.stringify(check) : null));
   } catch (e) {
     parsed = {
       ok: false,
       stopped: stopRequested(),
       error: { type: 'InternalError', message: String(e), line: null, traceback: '' },
+      check: null,
     };
   }
   flushOutput();
@@ -169,6 +178,7 @@ function run(runId: number, code: string) {
     ok: parsed.ok && !stopped,
     stopped,
     error: stopped ? null : parsed.error,
+    check: stopped ? null : parsed.check,
     ms: Math.round(performance.now() - t0),
   });
   if (control) Atomics.store(control, CTL.STOP_REQUESTED, 0);
@@ -180,6 +190,6 @@ ctx.onmessage = (event) => {
   if (msg.type === 'init') {
     init(msg.buffers).catch((e: unknown) => post({ type: 'load-error', message: String(e) }));
   } else if (msg.type === 'run') {
-    run(msg.runId, msg.code);
+    run(msg.runId, msg.code, msg.check);
   }
 };

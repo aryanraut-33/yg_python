@@ -3,6 +3,8 @@ import {
   CTL,
   CTL_SLOTS,
   STDIN_BYTES,
+  type CheckResult,
+  type CheckSpec,
   type LoadMetrics,
   type PythonErrorInfo,
   type SharedBuffers,
@@ -15,6 +17,7 @@ export interface RunResult {
   ok: boolean;
   stopped: boolean;
   error: PythonErrorInfo | null;
+  check: CheckResult | null;
   ms: number;
   /** True when Stop had to restart Python because the program ignored the interrupt. */
   hardRestart: boolean;
@@ -49,7 +52,7 @@ export class PythonRunner {
   private activeRun: number | null = null;
   private stopStartedAt: number | null = null;
   private hardStopTimer: ReturnType<typeof setTimeout> | null = null;
-  private pendingCode: string | null = null;
+  private pending: { code: string; check: CheckSpec | null } | null = null;
   private restartedByStop = false;
 
   constructor(private readonly events: RunnerEvents) {
@@ -60,17 +63,17 @@ export class PythonRunner {
     return this.status;
   }
 
-  run(code: string) {
+  run(code: string, check: CheckSpec | null = null) {
     if (this.status === 'running' || this.status === 'waiting-for-input') return;
     if (this.status !== 'ready') {
-      this.pendingCode = code; // Run as soon as Python is ready.
+      this.pending = { code, check }; // Run as soon as Python is ready.
       return;
     }
     this.runId += 1;
     this.activeRun = this.runId;
     if (this.control) Atomics.store(this.control, CTL.STOP_REQUESTED, 0);
     this.setStatus('running');
-    this.worker.postMessage({ type: 'run', runId: this.runId, code });
+    this.worker.postMessage({ type: 'run', runId: this.runId, code, check });
   }
 
   stop() {
@@ -126,7 +129,7 @@ export class PythonRunner {
     this.restartedByStop = this.stopStartedAt !== null;
     this.setStatus('restarting');
     if (wasRun !== null) {
-      this.events.onDone({ ok: false, stopped: true, error: null, ms: 0, hardRestart: true });
+      this.events.onDone({ ok: false, stopped: true, error: null, check: null, ms: 0, hardRestart: true });
     }
     this.spawn();
   }
@@ -158,10 +161,10 @@ export class PythonRunner {
         } else {
           this.events.onReady({ ...msg.metrics, pageToReadyMs: Math.round(performance.now()) });
         }
-        if (this.pendingCode !== null) {
-          const code = this.pendingCode;
-          this.pendingCode = null;
-          this.run(code);
+        if (this.pending !== null) {
+          const { code, check } = this.pending;
+          this.pending = null;
+          this.run(code, check);
         }
         break;
       }
@@ -187,7 +190,14 @@ export class PythonRunner {
         this.clearHardStop();
         this.activeRun = null;
         this.setStatus('ready');
-        this.events.onDone({ ok: msg.ok, stopped: msg.stopped, error: msg.error, ms: msg.ms, hardRestart: false });
+        this.events.onDone({
+          ok: msg.ok,
+          stopped: msg.stopped,
+          error: msg.error,
+          check: msg.check,
+          ms: msg.ms,
+          hardRestart: false,
+        });
         if (msg.stopped) this.recordStopRecovered();
         break;
       }
