@@ -1,20 +1,28 @@
 import { useEffect, useRef, useState } from 'react';
 import type { PythonErrorInfo } from '../runtime/protocol';
+import type { KidError } from '../errors/translate';
+import { RichText } from './RichText';
 
 export interface ConsoleLine {
   kind: 'out' | 'err' | 'info' | 'input';
   text: string;
 }
 
-interface Props {
-  lines: ConsoleLine[];
-  error: PythonErrorInfo | null;
-  waitingForInput: boolean;
-  onSubmitInput(text: string): void;
+export interface ShownError {
+  kid: KidError;
+  raw: PythonErrorInfo;
 }
 
-/** Program output, errors, and the answer box for input(). */
-export function Console({ lines, error, waitingForInput, onSubmitInput }: Props) {
+interface Props {
+  lines: ConsoleLine[];
+  error: ShownError | null;
+  waitingForInput: boolean;
+  onSubmitInput(text: string): void;
+  emptyText?: string;
+}
+
+/** Program output, errors in kid language, and the answer box for input(). */
+export function Console({ lines, error, waitingForInput, onSubmitInput, emptyText }: Props) {
   const scroller = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [answer, setAnswer] = useState('');
@@ -36,7 +44,7 @@ export function Console({ lines, error, waitingForInput, onSubmitInput }: Props)
         <span className="panel-title">Output</span>
       </div>
       <div className="console-scroll" ref={scroller}>
-        {empty && <p className="console-empty">Press Run and anything your program prints shows up here.</p>}
+        {empty && <p className="console-empty">{emptyText ?? 'Press Run and anything your program prints shows up here.'}</p>}
         <pre className="console-text" aria-live="polite">
           {lines.map((l, i) => (
             <span key={i} className={`out-${l.kind}`}>
@@ -73,15 +81,17 @@ export function Console({ lines, error, waitingForInput, onSubmitInput }: Props)
         )}
         {error && (
           <div className="error-card" role="alert">
-            <p className="error-title">
-              {error.type}
-              {error.line !== null && <span> on line {error.line}</span>}
+            <p className="error-title">{error.kid.title}</p>
+            <p className="error-message">
+              <RichText text={error.kid.message} />
             </p>
-            <p className="error-message">{error.message}</p>
-            {error.traceback && (
+            <p className="error-tip">
+              <RichText text={error.kid.tip} />
+            </p>
+            {error.raw.traceback && (
               <details>
-                <summary>Python's full message</summary>
-                <pre>{error.traceback}</pre>
+                <summary>Python's own words</summary>
+                <pre>{error.raw.traceback}</pre>
               </details>
             )}
           </div>

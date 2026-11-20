@@ -29,6 +29,10 @@ export const editorTheme = EditorView.theme({
   '.cm-activeLine': { backgroundColor: 'var(--active-line)' },
   '.cm-activeLineGutter': { backgroundColor: 'transparent', color: 'var(--text-soft)' },
   '.cm-matchingBracket': { backgroundColor: 'var(--selection)', outline: 'none' },
+  '.cm-error-line': {
+    backgroundColor: 'var(--error-line)',
+    boxShadow: 'inset 3px 0 0 var(--coral)',
+  },
 });
 
 export const highlightStyle = HighlightStyle.define([
