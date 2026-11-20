@@ -1,0 +1,158 @@
+.report {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+}
+
+.report-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.report-head h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 44px;
+  line-height: 1;
+}
+
+.report-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.report-actions a.btn {
+  text-decoration: none;
+}
+
+.gate-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin: 28px 0;
+}
+
+.gate-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 20px;
+  border-radius: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.gate-num {
+  font-family: var(--font-serif);
+  font-size: 44px;
+  line-height: 1;
+}
+
+.gate-label {
+  color: var(--text-soft);
+}
+
+.gate-target {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+.gate-target.met {
+  color: var(--success);
+}
+
+.report-empty {
+  padding: 24px;
+  border: 1px dashed var(--line);
+  border-radius: 0;
+  color: var(--text-soft);
+}
+
+.report-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 0;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.report-table th,
+.report-table td {
+  padding: 10px 14px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+
+.report-table th {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: var(--text-soft);
+  background: var(--surface);
+}
+
+.report-table tr.current td {
+  background: var(--notice-bg);
+}
+
+.report-table td.ok {
+  color: var(--success);
+  font-weight: 600;
+}
+.report-table td.warn {
+  color: var(--coral);
+}
+
+.report-table .sub,
+.step-times .sub {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.tag-now {
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 0;
+  background: var(--accent);
+  color: var(--primary-fg);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+:root[data-theme='light'] .tag-now {
+  color: #fff;
+}
+
+.report-details {
+  margin-top: 20px;
+}
+.report-details summary {
+  cursor: pointer;
+  color: var(--text-soft);
+}
+.step-times ol {
+  margin: 4px 0 12px;
+  font-size: 13px;
+}
+
+.report-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 32px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
