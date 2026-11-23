@@ -1,0 +1,669 @@
+/* Tinkora · Recipient Studio Page (/s/:token)
+   Widescreen Laptop Hero Layout & Night Workshop Aesthetic. */
+
+/* ── Fullscreen Hero Shell ── */
+.studio-hero-page {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Shifts the floating navbar a few pixels upwards closer to the top bezel */
+.studio-hero-page .site-nav-row {
+  padding: 10px 24px 0;
+}
+
+/* ── Main Hero Grid (Laptop-first 2-Column Layout) ── */
+.studio-hero-main {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(460px, 1.35fr);
+  gap: 36px;
+  max-width: 1360px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 124px 36px 40px; /* Generous breathing room below floating navbar */
+  align-items: start;
+}
+
+/* ══════════════════════════════════════
+   LEFT COLUMN: Greeting, Reactions, Corner
+   ══════════════════════════════════════ */
+.studio-col-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.studio-intro .label {
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+
+.studio-greeting-title {
+  margin: 0 0 12px;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(34px, 3.8vw, 52px);
+  line-height: 1.05;
+}
+
+.studio-greeting-sub {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text-soft);
+  max-width: 480px;
+}
+.studio-greeting-sub strong {
+  color: var(--text);
+}
+
+/* Compliments Box */
+.studio-react-box {
+  padding: 22px 24px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.studio-react-head .label {
+  margin: 0 0 6px;
+  color: var(--text-soft);
+}
+.studio-react-hint {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.studio-toast {
+  margin: 0 0 12px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--mint) 12%, transparent);
+  border: 1px solid var(--mint);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--mint);
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.studio-react-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.studio-react-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.studio-react-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  transform: translateY(-1px);
+}
+.studio-react-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+.studio-react-btn.has-reacted {
+  border-color: var(--mint);
+  background: color-mix(in srgb, var(--mint) 12%, transparent);
+  cursor: default;
+}
+
+.studio-react-emoji {
+  font-size: 17px;
+  line-height: 1;
+}
+.studio-react-label {
+  line-height: 1;
+}
+.studio-react-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: var(--radius-pill);
+  background: var(--track);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+/* ── Bottom-Left Corner Element: About Tinkora ── */
+.studio-corner-about {
+  position: relative;
+  margin-top: 6px;
+}
+
+.studio-about-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.studio-about-pill:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
+.studio-about-star {
+  color: var(--accent);
+}
+.studio-about-arrow {
+  font-size: 11px;
+}
+
+.studio-about-popover {
+  margin-top: 10px;
+  padding: 18px 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+  animation: popUp 0.18s ease;
+  max-width: 440px;
+}
+@keyframes popUp {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.studio-about-popover .label {
+  margin: 0 0 8px;
+  color: var(--accent);
+}
+
+.studio-about-desc {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-soft);
+}
+.studio-about-desc strong {
+  color: var(--text);
+}
+
+.studio-about-cta {
+  font-size: 13px;
+  padding: 8px 16px;
+}
+
+/* ══════════════════════════════════════
+   RIGHT COLUMN: The Stage Player Card
+   ══════════════════════════════════════ */
+.studio-col-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.studio-player-card {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Top bar */
+.studio-player-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.studio-player-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
+.studio-project-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.studio-project-author {
+  font-size: 13px;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+/* View Mode Switcher */
+.studio-view-toggle {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+
+.studio-view-btn {
+  padding: 5px 12px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.studio-view-btn:hover {
+  color: var(--text);
+}
+.studio-view-btn.is-active {
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Sub-bar: Status indicator */
+.studio-player-subbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 50%, transparent);
+}
+
+.studio-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-soft);
+}
+.studio-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-soft);
+}
+.studio-status-indicator.is-running .studio-status-dot {
+  background: var(--mint);
+  box-shadow: 0 0 6px var(--mint);
+  animation: pulse-dot 1.2s ease infinite;
+}
+.studio-status-indicator.is-running {
+  color: var(--mint);
+}
+
+.studio-tech-note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+/* ── Screen Viewport ── */
+.studio-screen-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: 440px;
+  background: #081210;
+  overflow: hidden;
+}
+
+.studio-screen-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Visual Canvas */
+.studio-canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── Story / Text Output Screen (When Python prints text) ── */
+.studio-story-screen {
+  width: 100%;
+  height: 100%;
+  padding: 32px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: radial-gradient(circle at center, #0f201c 0%, #081210 100%);
+  overflow-y: auto;
+}
+
+.studio-story-badge {
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.studio-story-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.studio-story-line {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.4vw, 32px);
+  font-weight: 400;
+  line-height: 1.35;
+  color: #f7eedb;
+  letter-spacing: 0.01em;
+}
+
+/* Standby Overlay */
+.studio-standby-overlay {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, #081210 90%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  z-index: 10;
+}
+.studio-standby-overlay:hover {
+  background: color-mix(in srgb, #081210 75%, transparent);
+}
+
+.studio-standby-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.studio-standby-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  font-size: 22px;
+  padding-left: 4px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.studio-standby-overlay:hover .studio-standby-icon {
+  transform: scale(1.1);
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.studio-standby-prompt {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--text);
+}
+
+.studio-standby-sub {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+/* Console tab */
+.studio-console-tab {
+  width: 100%;
+  height: 100%;
+  padding: 16px 20px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.55;
+  color: #7be0c3;
+  background: #060e0c;
+  overflow-y: auto;
+}
+.studio-console-empty {
+  color: var(--text-soft);
+  margin: 20px 0;
+}
+.studio-console-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.studio-console-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Code tab */
+.studio-code-tab {
+  width: 100%;
+  height: 100%;
+  padding: 18px 22px;
+  background: #060e0c;
+  overflow-y: auto;
+}
+.studio-code-head .label {
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+.studio-code-pre {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: #7be0c3;
+  white-space: pre-wrap;
+}
+
+/* ── Controls Bar ── */
+.studio-player-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.studio-btn-run,
+.studio-btn-stop {
+  padding: 10px 22px;
+  font-size: 15px;
+}
+
+.studio-controls-hint {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+/* Multi-project tabs */
+.studio-tabs {
+  display: flex;
+  gap: 6px;
+}
+.studio-tab {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.studio-tab.is-active {
+  border-color: var(--accent);
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+/* ── Error card ── */
+.studio-error-card {
+  max-width: 520px;
+  margin: 80px auto;
+  padding: 36px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  text-align: center;
+}
+.studio-error-title {
+  margin: 10px 0 8px;
+  font-family: var(--font-serif);
+  font-size: 32px;
+}
+.studio-error-desc {
+  margin: 0 0 24px;
+  color: var(--text-soft);
+  font-size: 15px;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVENESS (Laptop vs Mobile)
+   ══════════════════════════════════════ */
+@media (max-width: 959px) {
+  .studio-hero-main {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 108px 18px 64px;
+  }
+  .studio-greeting-title {
+    font-size: 32px;
+  }
+  .studio-screen-viewport {
+    aspect-ratio: 4 / 3;
+    max-height: 380px;
+  }
+  .studio-story-screen {
+    padding: 24px 20px;
+  }
+  .studio-story-line {
+    font-size: 20px;
+  }
+  .studio-player-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .studio-view-toggle {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .studio-view-btn {
+    flex: 1;
+    text-align: center;
+  }
+  .studio-player-controls {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+}
+
+/* ── Waiting for Input Bar ── */
+.studio-input-bar {
+  padding: 14px 20px;
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+  border-top: 1px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.studio-input-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+.studio-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.studio-input-field {
+  flex: 1;
+  padding: 8px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+.studio-input-field:focus {
+  outline: 2px solid var(--focus);
+  outline-offset: -1px;
+}
+
+.studio-input-submit {
+  font-size: 13px;
+  padding: 8px 16px;
+}
+
+/* ── Touch Bar inside Studio Player ── */
+.studio-touch-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-pill);
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  padding: 4px 12px;
+  cursor: pointer;
+  margin: 8px 16px 0 auto;
+}
+.studio-touch-toggle:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+.studio-touch-toggle.is-active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+}

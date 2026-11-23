@@ -1,0 +1,154 @@
+/* Tinkora · Phase 3 Sharing & Publish Modal (LED Board style) */
+
+.share-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: color-mix(in srgb, #0b1714 85%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.share-modal {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--text);
+  padding: 32px 30px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+.share-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  cursor: pointer;
+}
+.share-close:hover {
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.share-title {
+  margin: 0 0 8px;
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.share-lead {
+  margin: 0 0 20px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+.share-form {
+  display: grid;
+  gap: 16px;
+}
+
+.share-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0 10px;
+}
+
+.share-chip {
+  padding: 5px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-xs);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+.share-chip:hover,
+.share-chip.is-selected {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--text);
+}
+
+.share-warning {
+  padding: 10px 14px;
+  border-left: 3px solid var(--coral);
+  border-radius: var(--radius-xs);
+  background: color-mix(in srgb, var(--coral) 12%, transparent);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+.share-success-box {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  margin: 16px 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+
+.share-url-row {
+  display: flex;
+  gap: 8px;
+}
+
+.share-url-input {
+  flex: 1;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-xs);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.share-whatsapp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border: 1px solid #25d366;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, #25d366 16%, transparent);
+  color: #25d366;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.share-whatsapp-btn:hover {
+  background: #25d366;
+  color: #0b1714;
+}
+
+.share-btn-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
