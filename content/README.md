@@ -42,6 +42,25 @@ content/projects/name-light-show/
 
 Ids must be unique within a project (milestones and steps share one namespace).
 
+## Additions in Phase 2
+
+- **`words`** (optional): kid-facing text for the intro and finish screens: `intro` (Markdown), `finished`, `replay` (the button that re-runs their program) and `tinker`.
+- **`files.preview`** (optional): a demo that plays on the intro screen instead of the solution. Use it when the solution waits for `input()`.
+- **Templates in step code:**
+  - `{{key}}` is filled with a value an earlier check remembered (`remember = {...}`).
+  - `{{key|default}}` uses the default until that value exists.
+  - Plain values go inside quotes, so quotes are stripped from them.
+  - Keys ending in `_py` are inserted as written. Use them for Python literals the check builds itself, like `remember = {"heroes_py": repr(heroes)}`, which can be up to 600 characters.
+- **Check helpers** (available inside `check-*.py`):
+  - `output`, `ns`, `code` and `fail(message)`;
+  - drawing: `circles()`, `texts()`, `lines()`, `rects()`, `sprites()` and `waits()`;
+  - `spoken()` and `rover_state()`;
+  - **`simulate(answers=[...], seed=None)`**, which re-runs the child's program silently, typing the answers into each `input()` in turn. It returns `.output`, `.ns`, `.drawn`, `.error`, `.ran_out` (it asked for more answers than it was given), `.runaway` (endless loop) and `.finished`.
+- **Libraries children can import:**
+  - `stage`: shapes, text, sprites, `speak`, `bar_chart`;
+  - `turtle`: the lookalike;
+  - `rover`: the Mars simulator.
+
 ## Validate
 
 ```

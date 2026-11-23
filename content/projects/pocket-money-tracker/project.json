@@ -1,0 +1,247 @@
+{
+  "formatVersion": 1,
+  "id": "pocket-money-tracker",
+  "title": "Pocket Money Tracker",
+  "pitch": "Save up for the thing you really want.",
+  "level": 1,
+  "category": "data",
+  "support": "fill",
+  "sessions": 2,
+  "concepts": [
+    "variables",
+    "arithmetic",
+    "lists",
+    "sum-len",
+    "charts",
+    "while-loops"
+  ],
+  "needs": [
+    "stage"
+  ],
+  "phoneFriendly": true,
+  "words": {
+    "intro": "Pick something you really want. Track your money in and out, draw a **chart**, and let Python predict the exact week you can buy it.",
+    "finished": "You built a real money planner. Show it to the grown-ups!",
+    "replay": "Show my savings plan",
+    "tinker": "Keep tinkering: what if you saved 20 more every week? Change the weekly list and watch the finish week move."
+  },
+  "files": {
+    "starter": "step-1-predict.py",
+    "solution": "solution.py"
+  },
+  "milestones": [
+    {
+      "id": "goal",
+      "title": "Set a goal",
+      "goal": "A savings goal that's really yours.",
+      "concepts": [
+        "variables",
+        "arithmetic"
+      ],
+      "steps": [
+        {
+          "id": "predict-need",
+          "type": "predict",
+          "instruction": "Look at the last line: `goal - saved`. What will it print?",
+          "code": "step-1-predict.py",
+          "choices": [
+            "I still need 650",
+            "I still need goal - saved",
+            "I still need 950",
+            "An error"
+          ],
+          "answer": 0,
+          "explain": "Without quotes, `goal - saved` is maths: Python opens both boxes and works out 800 - 150 = **650**.",
+          "check": {
+            "kind": "output-contains",
+            "value": "650",
+            "description": "Python did the maths!"
+          },
+          "hints": [
+            "Look at `goal - saved` in the last print.",
+            "Variables without quotes are boxes. Python uses what's inside them.",
+            "If `a = 10` and `b = 3`, then `print(a - b)` prints 7.",
+            "800 - 150 = ___",
+            "I still need 650. Pick that and Run."
+          ]
+        },
+        {
+          "id": "your-goal",
+          "type": "make-it-yours",
+          "instruction": "What do **you** want to save for? Change `goal_item` to your thing and `goal` to its price in rupees (a number, no quotes).",
+          "check": {
+            "kind": "python",
+            "file": "check-goal.py",
+            "description": "Goal set. Let's get saving!"
+          },
+          "hints": [
+            "Change the first two lines.",
+            "Words need quotes. Numbers don't.",
+            "`goal_item = \"football\"` and `goal = 1200`.",
+            "`goal_item = \"______\"` and `goal = ____`",
+            "`goal_item = \"skateboard\"` and `goal = 2500`. Use your own if you like!"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "track",
+      "title": "Track money in and out",
+      "goal": "Lists of money in and money out, added up.",
+      "concepts": [
+        "lists",
+        "sum-len"
+      ],
+      "steps": [
+        {
+          "id": "predict-sum",
+          "type": "predict",
+          "introduces": [
+            "lists",
+            "sum-len"
+          ],
+          "instruction": "Money comes in and goes out, so it lives in two **lists**. What will \"Saved so far\" show?",
+          "code": "step-3-predict.py",
+          "choices": [
+            "350",
+            "400",
+            "50",
+            "An error"
+          ],
+          "answer": 0,
+          "explain": "`sum(money_in)` is 100 + 50 + 200 + 50 = 400. `sum(money_out)` is 30 + 20 = 50. So 400 - 50 = **350**. `len(money_in)` counts the amounts: 4 weeks.",
+          "check": {
+            "kind": "output-contains",
+            "value": "350",
+            "description": "Your money, added up!"
+          },
+          "hints": [
+            "Look at the line `saved = sum(money_in) - sum(money_out)`.",
+            "`sum(list)` adds up every number in a list.",
+            "`sum([10, 20])` is 30.",
+            "400 - __ = ?",
+            "350. Pick that and Run."
+          ]
+        },
+        {
+          "id": "log-money",
+          "type": "build",
+          "instruction": "Log more money! Add **2 more** amounts to the end of `money_in` (pocket money, a birthday gift…) and **1 more** thing you spent to `money_out`.",
+          "check": {
+            "kind": "python",
+            "file": "check-log.py",
+            "description": "Your money log is growing!"
+          },
+          "hints": [
+            "Add numbers inside the square brackets, at the end.",
+            "Put a comma before each new number. No quotes for numbers.",
+            "`[100, 50]` with one more becomes `[100, 50, 75]`.",
+            "`money_in = [100, 50, 200, 50, ___, ___]` and `money_out = [30, 20, ___]`",
+            "`money_in = [100, 50, 200, 50, 100, 500]` and `money_out = [30, 20, 40]`."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chart",
+      "title": "Chart it",
+      "goal": "A bar chart that climbs towards your goal.",
+      "concepts": [
+        "lists",
+        "charts"
+      ],
+      "steps": [
+        {
+          "id": "draw-chart",
+          "type": "fill",
+          "introduces": [
+            "charts"
+          ],
+          "instruction": "This code adds your savings up week by week into a list called `totals`. Fill the blank so the chart shows **totals**, and watch the bars climb to your goal.",
+          "code": "step-5-fill.py",
+          "check": {
+            "kind": "python",
+            "file": "check-chart.py",
+            "description": "Look at those bars climb!"
+          },
+          "hints": [
+            "The blank is the first thing inside `stage.bar_chart(...)`.",
+            "`bar_chart` draws one bar per number in the list you give it.",
+            "`stage.bar_chart([10, 30, 60], [\"a\", \"b\", \"c\"])` draws three growing bars.",
+            "`stage.bar_chart(t_____, labels, ...)`",
+            "`stage.bar_chart(totals, labels, goal=goal, title=\"Saving for my \" + goal_item)`."
+          ]
+        },
+        {
+          "id": "recall-totals",
+          "type": "recall",
+          "instruction": "Quick check: with `weekly = [100, 50, 200, 50, 80, 120]`, what does `totals` hold after the loop?",
+          "choices": [
+            "[100, 150, 350, 400, 480, 600]",
+            "[100, 50, 200, 50, 80, 120]",
+            "600",
+            "[600]"
+          ],
+          "answer": 0,
+          "explain": "Each time round, `running` grows by that week's amount, and `.append()` adds the new running total to the list. So each total includes every week before it.",
+          "hints": [
+            "Look at the printed line that starts with Totals.",
+            "`running = running + amount` keeps a running total.",
+            "After week 1: 100. After week 2: 100 + 50 = 150.",
+            "Then 150 + 200 = 350, and so on.",
+            "[100, 150, 350, 400, 480, 600]"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "predict",
+      "title": "Predict the finish week",
+      "goal": "Python tells you the exact week you can buy it.",
+      "concepts": [
+        "while-loops",
+        "arithmetic"
+      ],
+      "steps": [
+        {
+          "id": "finish-week",
+          "type": "fill",
+          "introduces": [
+            "while-loops"
+          ],
+          "instruction": "Now Python looks into the future: it keeps adding a week of savings **while** the total is still below the goal. Fill the blank with the right comparison.",
+          "code": "step-7-fill.py",
+          "check": {
+            "kind": "python",
+            "file": "check-finish-week.py",
+            "description": "Now you know the exact week!"
+          },
+          "hints": [
+            "The blank is in `while total ___ goal:`.",
+            "The loop should keep going as long as you haven't reached the goal yet.",
+            "`<` means less than. `>` means greater than.",
+            "`while total _ goal:`",
+            "`while total < goal:`. Run it to see your finish week."
+          ]
+        },
+        {
+          "id": "your-plan",
+          "type": "make-it-yours",
+          "instruction": "Make it your plan: change the numbers in `weekly` to what you could really save. Could you reach your goal sooner? (If you add weeks, add labels like `\"W7\"` too.)",
+          "check": {
+            "kind": "python",
+            "file": "check-plan.py",
+            "description": "That's a real plan. Show a grown-up!"
+          },
+          "hints": [
+            "Change the numbers in the `weekly = [...]` list.",
+            "Bigger weekly numbers mean an earlier finish week.",
+            "`weekly = [150, 150, 150, 150, 150, 150]` saves 150 every week.",
+            "`weekly = [___, ___, ___, ___, ___, ___]`",
+            "`weekly = [120, 120, 150, 100, 200, 120]`. Run it and see the week change."
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,242 @@
+{
+  "formatVersion": 1,
+  "id": "rocket-launch",
+  "title": "Rocket Launch",
+  "pitch": "Count down. Launch a rocket.",
+  "level": 1,
+  "category": "space",
+  "support": "fill",
+  "sessions": 1,
+  "concepts": [
+    "for-loops",
+    "counting-down",
+    "wait",
+    "if-else",
+    "comparisons",
+    "variables"
+  ],
+  "needs": [
+    "stage"
+  ],
+  "phoneFriendly": true,
+  "words": {
+    "intro": "Write a real countdown from **10 to 1**, then make your rocket blast off the stage exactly on zero.",
+    "finished": "That countdown, the colours and the lift-off are all your own Python.",
+    "replay": "Launch my rocket",
+    "tinker": "Keep tinkering: count down from 20, change the colours, or make the rocket fly faster."
+  },
+  "files": {
+    "starter": "step-1-predict.py",
+    "solution": "solution.py"
+  },
+  "milestones": [
+    {
+      "id": "countdown",
+      "title": "Count down",
+      "goal": "A countdown from 10 to 1, one number every half second.",
+      "concepts": [
+        "for-loops",
+        "counting-down",
+        "wait"
+      ],
+      "steps": [
+        {
+          "id": "predict-countdown",
+          "type": "predict",
+          "introduces": [
+            "counting-down"
+          ],
+          "instruction": "Look at `range(10, 0, -1)`. What will this print? Pick your guess, then press **Run**.",
+          "code": "step-1-predict.py",
+          "choices": [
+            "10, 9, 8 … down to 1",
+            "1, 2, 3 … up to 10",
+            "10, 9, 8 … down to 0",
+            "Just the number 10"
+          ],
+          "answer": 0,
+          "explain": "`range(10, 0, -1)` starts at **10** and takes steps of **-1**. It stops *before* 0, so the last number is 1. A perfect countdown!",
+          "check": {
+            "kind": "output-contains",
+            "value": "10",
+            "description": "Your countdown ran!"
+          },
+          "hints": [
+            "Look at the three numbers inside `range(...)`.",
+            "`range(start, stop, step)`: it starts at the first number and stops just before the second one.",
+            "`range(5, 0, -1)` gives 5, 4, 3, 2, 1.",
+            "It starts at 10, takes steps of -1, and stops before ___.",
+            "It prints 10, 9, 8 … down to 1. Pick that answer and press Run."
+          ]
+        },
+        {
+          "id": "add-wait",
+          "type": "build",
+          "instruction": "A real countdown waits between numbers. Add `stage.wait(0.5)` **inside** the loop, under `print(n)`, so each number waits half a second.",
+          "check": {
+            "kind": "python",
+            "file": "check-wait.py",
+            "description": "Tick… tick… tick… a real countdown!"
+          },
+          "hints": [
+            "The new line goes inside the for loop, right under `print(n)`.",
+            "Lines inside a loop start with 4 spaces. They repeat every time round.",
+            "`for i in range(3):` then `    print(i)` then `    stage.wait(1)` waits 1 second after each number.",
+            "Under `print(n)`, add a line with 4 spaces, then `stage.wait(___)`.",
+            "Add `    stage.wait(0.5)` (4 spaces in front) on the line under `print(n)`."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "on-the-stage",
+      "title": "Numbers on the stage",
+      "goal": "Big countdown numbers next to your rocket, turning red at the end.",
+      "concepts": [
+        "variables",
+        "if-else",
+        "comparisons"
+      ],
+      "steps": [
+        {
+          "id": "fill-number",
+          "type": "fill",
+          "instruction": "Now the rocket stands on the stage. Fill the blank `___` so the stage shows each countdown number. Which variable holds the number?",
+          "code": "step-3-fill.py",
+          "check": {
+            "kind": "python",
+            "file": "check-numbers.py",
+            "description": "Big numbers on the stage!"
+          },
+          "hints": [
+            "Look at the `stage.text(320, 130, ___, size=90)` line.",
+            "`stage.text(x, y, words)` writes whatever goes in the third spot. The loop keeps the current number in `n`.",
+            "`stage.text(320, 130, \"Hi\", size=90)` would write Hi. You want the number instead.",
+            "`stage.text(320, 130, _, size=90)`: the blank is one letter, the loop's variable.",
+            "`stage.text(320, 130, n, size=90)`. Type it yourself, then Run."
+          ]
+        },
+        {
+          "id": "predict-if",
+          "type": "predict",
+          "introduces": [
+            "if-else",
+            "comparisons"
+          ],
+          "instruction": "New code with `if` and `else`! Which numbers do you think will turn **coral** (orangey-red)?",
+          "code": "step-4-predict.py",
+          "choices": [
+            "3, 2 and 1",
+            "10, 9 and 8",
+            "All of them",
+            "None of them"
+          ],
+          "answer": 0,
+          "explain": "`if n <= 3:` asks \"is n 3 or less?\". Only 3, 2 and 1 answer **True**, so they're coral. Every other number goes to `else` and stays cream.",
+          "check": {
+            "kind": "runs",
+            "description": "Watch the last three numbers change colour!"
+          },
+          "hints": [
+            "Look at the line `if n <= 3:`.",
+            "`<=` means \"less than or equal to\". The `if` lines run only when that's True.",
+            "If n is 7, is 7 <= 3? No, so it goes to `else`.",
+            "Only numbers that are 3 or ___ turn coral.",
+            "3, 2 and 1 turn coral. Pick that answer and press Run."
+          ]
+        },
+        {
+          "id": "last-five",
+          "type": "build",
+          "instruction": "Make the tension start earlier: change the code so the last **five** numbers (5, 4, 3, 2, 1) turn coral.",
+          "check": {
+            "kind": "python",
+            "file": "check-last-five.py",
+            "description": "5… 4… 3… 2… 1… so dramatic!"
+          },
+          "hints": [
+            "You only need to change one number, in the `if` line.",
+            "`if n <= 3:` is True for 3, 2 and 1. Which number would make it True for 5 down to 1?",
+            "`if n <= 7:` would make 7 down to 1 coral.",
+            "`if n <= _:`",
+            "Change it to `if n <= 5:` and Run."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lift-off",
+      "title": "Lift-off",
+      "goal": "The rocket blasts off the top of the stage, with fire underneath.",
+      "concepts": [
+        "variables",
+        "for-loops"
+      ],
+      "steps": [
+        {
+          "id": "fly",
+          "type": "fill",
+          "instruction": "Your program now has a lift-off part. `y` is how far down the rocket is. Fill the blank so `y` gets **smaller** every frame and the rocket flies off the top.",
+          "code": "step-6-fill.py",
+          "check": {
+            "kind": "python",
+            "file": "check-lift-off.py",
+            "description": "Lift-off! It flew right off the stage!"
+          },
+          "hints": [
+            "Look at the line `y = y - ___` near the bottom.",
+            "On the stage, y = 0 is the top. To go up, y must get smaller each time round the loop.",
+            "`y = y - 5` moves the rocket up 5 steps per frame. That's slow!",
+            "`y = y - __`: pick a number big enough to leave the stage in 25 frames.",
+            "`y = y - 20`. Try it, then try 30 for a faster rocket."
+          ]
+        },
+        {
+          "id": "fire",
+          "type": "build",
+          "instruction": "Add fire! Inside the lift-off loop, **above** the rocket line, add `stage.sprite(\"flame\", 320, y + 60, 2)`. Want smoke too? Add a `\"smoke\"` sprite near the ground.",
+          "check": {
+            "kind": "python",
+            "file": "check-flame.py",
+            "description": "Whoosh! Fire under the rocket."
+          },
+          "hints": [
+            "The new line goes inside the second loop (the lift-off one), before `stage.sprite(\"rocket\", ...)`.",
+            "Things drawn later go on top. Draw the flame first, then the rocket over it.",
+            "`stage.sprite(\"star\", 100, 50)` draws a star at x 100, y 50.",
+            "`    stage.sprite(\"flame\", 320, y + __, 2)` with 4 spaces in front.",
+            "Add `    stage.sprite(\"flame\", 320, y + 60, 2)` right above `    stage.sprite(\"rocket\", 320, y, 2)`."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "your-rocket",
+      "title": "Name your rocket",
+      "goal": "A launch named by you, for someone you love.",
+      "concepts": [
+        "variables",
+        "strings"
+      ],
+      "steps": [
+        {
+          "id": "name-rocket",
+          "type": "make-it-yours",
+          "instruction": "Every mission needs a name. Change `\"Mission Dadi\"` to your own, like `\"Mission Mama\"` or `\"Rocket Riff\"`. Keep the quotes.",
+          "check": {
+            "kind": "python",
+            "file": "check-name.py",
+            "description": "Your mission has a name. 3… 2… 1…"
+          },
+          "hints": [
+            "Look for `rocket_name = ` near the top.",
+            "Text goes inside quotes. The variable `rocket_name` keeps it for the stage.",
+            "`rocket_name = \"Mission Nani\"` names it after Nani.",
+            "`rocket_name = \"Mission ______\"`",
+            "`rocket_name = \"Mission Moon\"`. Type your own name in, then Run."
+          ]
+        }
+      ]
+    }
+  ]
+}

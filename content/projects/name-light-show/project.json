@@ -19,6 +19,12 @@
     "stage"
   ],
   "phoneFriendly": true,
+  "words": {
+    "intro": "In about 10 minutes, you'll write real Python that makes **your name** flash in lights.",
+    "finished": "Every line of that light show is your own Python.",
+    "replay": "Watch my light show",
+    "tinker": "Keep tinkering: change anything in the code and press Run. Try a different name, colour or speed."
+  },
   "files": {
     "starter": "step-1-predict.py",
     "solution": "solution.py"

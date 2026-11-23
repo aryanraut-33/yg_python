@@ -1,0 +1,259 @@
+{
+  "formatVersion": 1,
+  "id": "guess-my-number",
+  "title": "Guess My Number",
+  "pitch": "Build a game nobody can beat.",
+  "level": 1,
+  "category": "games",
+  "support": "fill",
+  "sessions": 2,
+  "concepts": [
+    "random",
+    "input",
+    "int-conversion",
+    "if-else",
+    "elif",
+    "while-loops",
+    "counters",
+    "comparisons"
+  ],
+  "needs": [],
+  "phoneFriendly": true,
+  "words": {
+    "intro": "Build a real game: the computer picks a secret number and gives **higher** or **lower** hints. Then flip it, so the computer guesses *yours*.",
+    "finished": "You built two games, and a guessing trick that never needs more than 7 tries.",
+    "replay": "Play my game",
+    "tinker": "Keep tinkering: make it 1 to 1000 (how many tries does the machine need now?), or add a limit of 7 guesses."
+  },
+  "files": {
+    "starter": "step-1-predict.py",
+    "solution": "solution.py",
+    "preview": "preview.py"
+  },
+  "milestones": [
+    {
+      "id": "secret",
+      "title": "Pick a secret",
+      "goal": "The computer secretly picks a number from 1 to 100.",
+      "concepts": [
+        "random"
+      ],
+      "steps": [
+        {
+          "id": "predict-random",
+          "type": "predict",
+          "introduces": [
+            "random"
+          ],
+          "instruction": "What number do you think the computer will pick? Make your guess, then **Run** it two or three times.",
+          "code": "step-1-predict.py",
+          "choices": [
+            "Always 1",
+            "A number from 1 to 10, often different each time",
+            "Always 10",
+            "The word secret"
+          ],
+          "answer": 1,
+          "explain": "`random.randint(1, 10)` rolls a 10-sided dice: any whole number from 1 to 10, both ends included. Run it again and you'll probably get a different one.",
+          "check": {
+            "kind": "output-contains",
+            "value": "picked",
+            "description": "The computer picked a number!"
+          },
+          "hints": [
+            "Look at `random.randint(1, 10)`.",
+            "`randint` means \"random integer\": a random whole number between the two numbers.",
+            "`random.randint(1, 6)` is like rolling a dice.",
+            "It picks a number from 1 to __, and it can change every Run.",
+            "A number from 1 to 10, often different each time. Pick that and Run it a few times."
+          ]
+        },
+        {
+          "id": "keep-secret",
+          "type": "build",
+          "instruction": "Make the game harder: change it to pick from **1 to 100**, and delete the `Psst` line so the secret stays secret.",
+          "check": {
+            "kind": "python",
+            "file": "check-range.py",
+            "description": "Shh. The secret is safe."
+          },
+          "hints": [
+            "Two changes: the second number in `randint`, and the last line.",
+            "`random.randint(low, high)` picks between low and high. A `print` shows things, so the Psst line gives the secret away.",
+            "`random.randint(1, 50)` would pick from 1 to 50.",
+            "`secret = random.randint(1, ___)`, and remove `print(\"Psst, it's\", secret)`.",
+            "Change it to `secret = random.randint(1, 100)` and delete the whole Psst line. Update the message to say 1 to 100 too."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ask",
+      "title": "Ask for a guess",
+      "goal": "The player types a guess and gets a hint.",
+      "concepts": [
+        "input",
+        "int-conversion",
+        "if-else",
+        "elif",
+        "comparisons"
+      ],
+      "steps": [
+        {
+          "id": "predict-input",
+          "type": "predict",
+          "introduces": [
+            "input",
+            "int-conversion"
+          ],
+          "instruction": "New code with `input()`. What happens when you press Run?",
+          "code": "step-3-predict.py",
+          "choices": [
+            "It waits for you to type a guess in the output panel",
+            "It guesses for you",
+            "It crashes straight away",
+            "It prints the secret"
+          ],
+          "answer": 0,
+          "explain": "`input(\"Your guess: \")` shows the question and **waits** for you to type and press Enter. `int(...)` turns what you typed into a number, so Python can compare it with the secret.",
+          "check": {
+            "kind": "runs",
+            "description": "Your game asked a question and listened!"
+          },
+          "hints": [
+            "Look at the line with `input(...)`.",
+            "`input()` pauses the program until someone types an answer.",
+            "`name = input(\"Name? \")` waits for a name.",
+            "It waits for you to ____ a guess.",
+            "It waits for you to type a guess. Pick that, Run, and type a number in the output panel."
+          ]
+        },
+        {
+          "id": "hints",
+          "type": "build",
+          "introduces": [
+            "elif"
+          ],
+          "instruction": "\"Nope!\" isn't much help. Add hints: if the guess is too small, print `Higher!`; if it's too big, print `Lower!`. Use `elif guess < secret:` between the `if` and the `else`.",
+          "check": {
+            "kind": "python",
+            "file": "check-hints.py",
+            "description": "Great hints: higher… lower…"
+          },
+          "hints": [
+            "Change the part after `if guess == secret:`.",
+            "`elif` adds another check. Python runs the first one that's True.",
+            "`if temp > 35:` … `elif temp > 20:` … `else:` …",
+            "`elif guess < secret:` then `    print(\"Higher!\")`, then `else:` then `    print(\"______!\")`.",
+            "Replace the else part with: `elif guess < secret:` / `    print(\"Higher!\")` / `else:` / `    print(\"Lower!\")`."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "keep-going",
+      "title": "Keep guessing",
+      "goal": "A full game that counts your tries.",
+      "concepts": [
+        "while-loops",
+        "counters"
+      ],
+      "steps": [
+        {
+          "id": "loop",
+          "type": "fill",
+          "introduces": [
+            "while-loops"
+          ],
+          "instruction": "One guess isn't a game. A **while loop** keeps asking. Fill the blank so it keeps going *while the guess is not the secret*.",
+          "code": "step-5-fill.py",
+          "check": {
+            "kind": "python",
+            "file": "check-loop.py",
+            "description": "A real game! It keeps going until you win."
+          },
+          "hints": [
+            "The blank is in `while guess ___ secret:`.",
+            "The loop should repeat as long as the guess is wrong.",
+            "`==` means equal. `!=` means not equal.",
+            "`while guess _= secret:`",
+            "`while guess != secret:`. Run it and play!"
+          ]
+        },
+        {
+          "id": "count-tries",
+          "type": "build",
+          "introduces": [
+            "counters"
+          ],
+          "instruction": "Keep score! Add `tries = 0` before the loop, `tries = tries + 1` inside it, and print how many tries it took at the end.",
+          "check": {
+            "kind": "python",
+            "file": "check-tries.py",
+            "description": "Now you can beat your best score!"
+          },
+          "hints": [
+            "Three changes: one line above `while`, one inside the loop, and the last print.",
+            "A counter starts at 0 and goes up by 1 each time something happens.",
+            "`claps = 0`, then inside a loop `claps = claps + 1`, then `print(claps)`.",
+            "Before the loop: `tries = 0`. Inside: `    tries = tries + __`. At the end: `print(\"You got it in\", tries, \"tries!\")`.",
+            "Add `tries = 0` above the while line, `    tries = tries + 1` under the input line, and change the last line to `print(\"You got it in\", tries, \"tries!\")`."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "swap",
+      "title": "The computer guesses",
+      "goal": "A guessing machine that finds your number in 7 tries or fewer.",
+      "concepts": [
+        "while-loops",
+        "comparisons"
+      ],
+      "steps": [
+        {
+          "id": "predict-machine",
+          "type": "predict",
+          "instruction": "Now the computer guesses **your** number! `(low + high) // 2` finds the middle. If your number is 70, what's its first guess?",
+          "code": "step-7-predict.py",
+          "choices": [
+            "50",
+            "1",
+            "70",
+            "100"
+          ],
+          "answer": 0,
+          "explain": "(1 + 100) // 2 is 50: right in the middle. `//` divides and drops the leftover. Each answer cuts the possible numbers in half, so it never needs more than 7 tries for 1 to 100.",
+          "check": {
+            "kind": "runs",
+            "description": "Your guessing machine is alive!"
+          },
+          "hints": [
+            "Look at `guess = (low + high) // 2`. What are low and high at the start?",
+            "low is 1 and high is 100. `//` divides and throws away any leftover.",
+            "(1 + 9) // 2 is 5.",
+            "(1 + 100) // 2 is ___.",
+            "50. Pick it, then Run and answer higher, lower or yes."
+          ]
+        },
+        {
+          "id": "your-machine",
+          "type": "make-it-yours",
+          "instruction": "Play it! Think of a number and answer honestly. Can it always find it in **7 tries or fewer**? Then make it yours: change its messages, or make it 1 to 1000. Finish a game by typing **yes**.",
+          "check": {
+            "kind": "python",
+            "file": "check-machine.py",
+            "description": "Your machine can't be beaten!"
+          },
+          "hints": [
+            "Play a full game first, answering higher, lower or yes.",
+            "To change the range, change `high = 100`. The messages are inside the `print(...)` lines.",
+            "`high = 1000` makes it 1 to 1000. It needs 10 tries at most.",
+            "Change a message, like `print(\"Hmm… is it\", guess, \"?\")`.",
+            "Change `high = 100` to `high = 1000` and the first message to say 1 to 1000. Run it and type yes when it gets your number."
+          ]
+        }
+      ]
+    }
+  ]
+}

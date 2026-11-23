@@ -6,7 +6,16 @@ import json, re, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 md = (ROOT / "docs" / "project-catalogue.md").read_text()
 
-LIVE = {"Name Light Show": "/play/name-light-show"}
+# Projects children can open now. Keep in step with content/projects/.
+LIVE = {
+    "Name Light Show": "/play/name-light-show",
+    "Rocket Launch": "/play/rocket-launch",
+    "Spiral Art": "/play/spiral-art",
+    "Guess My Number": "/play/guess-my-number",
+    "Story Machine": "/play/story-machine",
+    "Pocket Money Tracker": "/play/pocket-money-tracker",
+    "Mars Rover Rescue": "/play/mars-rover-rescue",
+}
 FEATURED = ["Name Light Show", "Invisible Cloak", "Mars Rover Rescue", "Drone Delivery", "Chandrayaan Lander", "Doodle Guesser", "Train Route Finder", "Secret Code Machine"]
 
 projects, level, level_name, cur, field = [], 0, "", None, None

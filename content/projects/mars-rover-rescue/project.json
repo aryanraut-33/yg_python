@@ -1,0 +1,251 @@
+{
+  "formatVersion": 1,
+  "id": "mars-rover-rescue",
+  "title": "Mars Rover Rescue",
+  "pitch": "Drive a rover across Mars.",
+  "level": 1,
+  "category": "robots",
+  "support": "fill",
+  "sessions": 3,
+  "concepts": [
+    "function-calls",
+    "sequences",
+    "functions",
+    "for-loops"
+  ],
+  "needs": [
+    "stage",
+    "robot-sim"
+  ],
+  "phoneFriendly": true,
+  "words": {
+    "intro": "Program a real rover: write the moves, steer around craters, and rescue a stranded probe **before the battery runs out**.",
+    "finished": "Five missions, all driven by your code. Mission control is proud.",
+    "replay": "Replay my rescue",
+    "tinker": "Keep tinkering: write your own functions, like turn_around() or drive(squares), and try to finish with even more battery."
+  },
+  "files": {
+    "starter": "step-1-predict.py",
+    "solution": "solution.py"
+  },
+  "milestones": [
+    {
+      "id": "drive",
+      "title": "First drive",
+      "goal": "The rover rolls to the flag.",
+      "concepts": [
+        "function-calls",
+        "sequences"
+      ],
+      "steps": [
+        {
+          "id": "predict-drive",
+          "type": "predict",
+          "introduces": [
+            "sequences"
+          ],
+          "instruction": "Mission 1! The flag is on the same row as the rover. What happens with `rover.forward(2)`?",
+          "code": "step-1-predict.py",
+          "choices": [
+            "It drives 2 squares and stops before the flag",
+            "It reaches the flag",
+            "It turns left",
+            "Nothing happens"
+          ],
+          "answer": 0,
+          "explain": "`rover.forward(2)` drives exactly 2 squares. The flag is 4 squares away, so the rover stops short. Robots do *exactly* what you say!",
+          "check": {
+            "kind": "runs",
+            "description": "Your rover moved!"
+          },
+          "hints": [
+            "Count the squares between the rover and the flag.",
+            "The number in `forward(...)` is how many squares it drives.",
+            "`rover.forward(1)` drives one square.",
+            "The flag is __ squares away, but the code says 2.",
+            "It drives 2 squares and stops before the flag. Pick that and Run."
+          ]
+        },
+        {
+          "id": "reach-flag",
+          "type": "build",
+          "instruction": "Change the number so the rover stops **right on the flag**.",
+          "check": {
+            "kind": "python",
+            "file": "check-mission-1.py",
+            "description": "Mission 1 complete!"
+          },
+          "hints": [
+            "Only the number in `rover.forward(...)` needs to change.",
+            "Count the squares from the rover to the flag on the stage.",
+            "If the flag were 3 squares away, you'd write `rover.forward(3)`.",
+            "`rover.forward(_)`",
+            "`rover.forward(4)`."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "turn",
+      "title": "Turn the corner",
+      "goal": "The rover turns to reach a flag up the map.",
+      "concepts": [
+        "sequences"
+      ],
+      "steps": [
+        {
+          "id": "turn-corner",
+          "type": "build",
+          "instruction": "Mission 2: the flag is **up** the map. After `forward(4)`, add `rover.turn(\"left\")`, then drive forward to the flag.",
+          "code": "step-3-build.py",
+          "check": {
+            "kind": "python",
+            "file": "check-mission-2.py",
+            "description": "Mission 2 complete!"
+          },
+          "hints": [
+            "Add 2 lines at the bottom: a turn and a forward.",
+            "`rover.turn(\"left\")` makes a quarter turn. Then the rover faces up the map.",
+            "`rover.turn(\"right\")` then `rover.forward(2)` would turn and drive 2 squares down.",
+            "`rover.turn(\"left\")` then `rover.forward(_)`",
+            "Add `rover.turn(\"left\")` and `rover.forward(3)`."
+          ]
+        },
+        {
+          "id": "recall-u-turn",
+          "type": "recall",
+          "instruction": "Think like a rover. It faces right, then does `turn(\"left\")` **twice**. Which way is it facing now?",
+          "choices": [
+            "Left (it did a U-turn)",
+            "Up",
+            "Down",
+            "Still right"
+          ],
+          "answer": 0,
+          "explain": "Each turn is a quarter turn. Two quarter turns make a half turn: a U-turn. Now it faces the opposite way.",
+          "hints": [
+            "Try it with your own body: face the screen, turn left, turn left again.",
+            "One turn is a quarter of a full spin.",
+            "Two quarters make a half.",
+            "A half turn faces the ________ way.",
+            "Left. It did a U-turn."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "craters",
+      "title": "Dodge craters",
+      "goal": "A go_around() function that steers past craters.",
+      "concepts": [
+        "sequences",
+        "functions",
+        "for-loops"
+      ],
+      "steps": [
+        {
+          "id": "dodge",
+          "type": "build",
+          "instruction": "Mission 3: a crater blocks the way! Steer around it: turn left, forward 1, turn right, forward 2, turn right, forward 1, turn left… then on to the flag.",
+          "code": "step-5-build.py",
+          "check": {
+            "kind": "python",
+            "file": "check-mission-3.py",
+            "description": "Mission 3 complete! No craters harmed."
+          },
+          "hints": [
+            "The rover is just before the crater. Plan the route square by square with your finger.",
+            "To go around: step to the side, drive past, step back. Each step is a turn plus a forward.",
+            "`rover.turn(\"left\")` then `rover.forward(1)` moves the rover up one row.",
+            "Left, forward(1), right, forward(2), right, forward(1), left, then forward(_) to the flag.",
+            "Add: `rover.turn(\"left\")`, `rover.forward(1)`, `rover.turn(\"right\")`, `rover.forward(2)`, `rover.turn(\"right\")`, `rover.forward(1)`, `rover.turn(\"left\")`, `rover.forward(2)`."
+          ]
+        },
+        {
+          "id": "go-around",
+          "type": "fill",
+          "introduces": [
+            "functions"
+          ],
+          "instruction": "Mission 4 has **three** craters. Writing those 7 moves three times is boring, so they're in a **function** called `go_around()`. Fill the blank to dodge the middle crater.",
+          "code": "step-6-fill.py",
+          "check": {
+            "kind": "python",
+            "file": "check-mission-4.py",
+            "description": "Mission 4 complete! Functions save work."
+          },
+          "hints": [
+            "The blank is between two `rover.forward(1)` lines.",
+            "`def go_around():` only describes the moves. Writing `go_around()` runs them.",
+            "The first crater is dodged by the line `go_around()` near the bottom.",
+            "`go______()`",
+            "Replace `___` with `go_around()`."
+          ]
+        },
+        {
+          "id": "loop-it",
+          "type": "build",
+          "instruction": "Still repeating! Replace the repeated lines with a loop: keep the first `rover.forward(1)`, then `for crater in range(3):` with `go_around()` and `rover.forward(1)` pushed in underneath.",
+          "check": {
+            "kind": "python",
+            "file": "check-loop.py",
+            "description": "Short code, same mission. That's what programmers love."
+          },
+          "hints": [
+            "The pattern `go_around()` then `rover.forward(1)` happens 3 times.",
+            "A for loop repeats the pushed-in lines. `range(3)` means 3 times.",
+            "`for i in range(3):` then `    print(\"hi\")` prints hi three times.",
+            "`rover.forward(1)`, then `for crater in range(3):`, then `    go_around()` and `    rover.forward(_)`.",
+            "After the function, write only: `rover.forward(1)` / `for crater in range(3):` / `    go_around()` / `    rover.forward(1)`."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rescue-mission",
+      "title": "Rescue the probe",
+      "goal": "Pick up the probe and get home before the battery dies.",
+      "concepts": [
+        "sequences",
+        "functions"
+      ],
+      "steps": [
+        {
+          "id": "rescue",
+          "type": "build",
+          "instruction": "Final mission! Drive to the **probe**, pick it up, and bring the rover **back to base**. Plan your route around the craters. Watch the battery!",
+          "code": "step-8-build.py",
+          "check": {
+            "kind": "python",
+            "file": "check-rescue.py",
+            "description": "Rescue complete! The probe is safe."
+          },
+          "hints": [
+            "Plan first: trace a route on the stage with your finger, avoiding every crater.",
+            "The bottom row and the top row have no craters at all.",
+            "Start with `rover.turn(\"right\")` and `rover.forward(1)` to reach the bottom row.",
+            "Bottom row out: right, forward(1), left, forward(7), left, forward(4). Then home: forward(1), left, forward(_), left, forward(4).",
+            "`rover.turn(\"right\")`, `rover.forward(1)`, `rover.turn(\"left\")`, `rover.forward(7)`, `rover.turn(\"left\")`, `rover.forward(4)`, `rover.forward(1)`, `rover.turn(\"left\")`, `rover.forward(7)`, `rover.turn(\"left\")`, `rover.forward(4)`."
+          ]
+        },
+        {
+          "id": "battery-record",
+          "type": "make-it-yours",
+          "instruction": "Mission control's challenge: finish the rescue with **at least 22%** battery left. Fewer squares and fewer turns save power.",
+          "check": {
+            "kind": "python",
+            "file": "check-record.py",
+            "description": "New battery record! Mission control is cheering."
+          },
+          "hints": [
+            "Every square costs 3% and every turn costs 1%. Count your route's cost.",
+            "Turning around (two turns) costs 2%. Is there a route home that doesn't need it?",
+            "Going out along the bottom row and home along the top row needs only 5 turns in total.",
+            "After the probe, keep facing up: forward(1), left, forward(7), left, forward(_).",
+            "`rover.turn(\"right\")`, `rover.forward(1)`, `rover.turn(\"left\")`, `rover.forward(7)`, `rover.turn(\"left\")`, `rover.forward(5)`, `rover.turn(\"left\")`, `rover.forward(7)`, `rover.turn(\"left\")`, `rover.forward(4)`."
+          ]
+        }
+      ]
+    }
+  ]
+}

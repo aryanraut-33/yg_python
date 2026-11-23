@@ -11,6 +11,8 @@ import {
 } from './protocol';
 import bootstrapPy from './python/bootstrap.py?raw';
 import stagePy from './python/stage.py?raw';
+import turtlePy from './python/turtle.py?raw';
+import roverPy from './python/rover.py?raw';
 
 declare const __PYODIDE_VERSION__: string;
 
@@ -138,6 +140,9 @@ async function init(buffers: Extract<MainToWorker, { type: 'init' }>['buffers'])
   pyodide.registerJsModule('_yg', { sleep, stage_flush: stageFlush });
   pyodide.FS.mkdirTree('/home/pyodide/yg');
   pyodide.FS.writeFile('/home/pyodide/yg/stage.py', stagePy);
+  // Our turtle lookalike shadows Python's own (which needs a desktop window).
+  pyodide.FS.writeFile('/home/pyodide/yg/turtle.py', turtlePy);
+  pyodide.FS.writeFile('/home/pyodide/yg/rover.py', roverPy);
   pyodide.runPython(bootstrapPy);
 
   py = pyodide;

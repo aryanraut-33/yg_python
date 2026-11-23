@@ -1,32 +1,212 @@
 {
-  "coordinates": {
-    "title": "x and y: how the stage finds a spot",
-    "lines": [
-      "The stage is like a giant grid of tiny dots: 640 across and 400 down.",
-      "x says how far **across** to go. y says how far **down** to go.",
-      "(0, 0) is the top-left corner, so (320, 200) is right in the middle!"
-    ],
-    "code": "stage.circle(320, 200, 40, \"butter\")",
-    "output": "A butter-yellow circle in the middle of the stage"
-  },
-  "for-loops": {
-    "title": "What's a for loop?",
-    "lines": [
-      "A **for loop** repeats some lines once for every item: every letter in a word, or every number in a list.",
-      "Think of handing out sweets: for each friend in the line, give one sweet. You don't write \"give a sweet\" ten times!",
-      "The lines pushed in with 4 spaces are the ones that repeat."
-    ],
-    "code": "for letter in \"NIX\":\n    print(letter)",
-    "output": "N\nI\nX"
-  },
-  "range": {
-    "title": "What does range() do?",
-    "lines": [
-      "`range(5)` hands Python the numbers 0, 1, 2, 3 and 4. That's 5 numbers.",
-      "Put it in a for loop and the loop runs that many times.",
-      "So `for flash in range(8):` makes your lights flash 8 times!"
-    ],
-    "code": "for i in range(3):\n    print(\"Hip hip hooray!\")",
-    "output": "Hip hip hooray!\nHip hip hooray!\nHip hip hooray!"
-  }
+ "coordinates": {
+  "title": "x and y: how the stage finds a spot",
+  "lines": [
+   "The stage is like a giant grid of tiny dots: 640 across and 400 down.",
+   "x says how far **across** to go. y says how far **down** to go.",
+   "(0, 0) is the top-left corner, so (320, 200) is right in the middle!"
+  ],
+  "code": "stage.circle(320, 200, 40, \"butter\")",
+  "output": "A butter-yellow circle in the middle of the stage"
+ },
+ "for-loops": {
+  "title": "What's a for loop?",
+  "lines": [
+   "A **for loop** repeats some lines once for every item: every letter in a word, or every number in a list.",
+   "Think of handing out sweets: for each friend in the line, give one sweet. You don't write \"give a sweet\" ten times!",
+   "The lines pushed in with 4 spaces are the ones that repeat."
+  ],
+  "code": "for letter in \"NIX\":\n    print(letter)",
+  "output": "N\nI\nX"
+ },
+ "range": {
+  "title": "What does range() do?",
+  "lines": [
+   "`range(5)` hands Python the numbers 0, 1, 2, 3 and 4. That's 5 numbers.",
+   "Put it in a for loop and the loop runs that many times.",
+   "So `for flash in range(8):` makes your lights flash 8 times!"
+  ],
+  "code": "for i in range(3):\n    print(\"Hip hip hooray!\")",
+  "output": "Hip hip hooray!\nHip hip hooray!\nHip hip hooray!"
+ },
+ "counting-down": {
+  "title": "Counting backwards with range()",
+  "lines": [
+   "`range()` can count down too. Give it three numbers: where to **start**, where to **stop**, and the **step**.",
+   "`range(10, 0, -1)` starts at 10 and takes steps of -1, so it goes 10, 9, 8… all the way to 1.",
+   "It stops *before* the stop number, so 0 never comes out. Just like a real countdown!"
+  ],
+  "code": "for n in range(3, 0, -1):\n    print(n)\nprint(\"Go!\")",
+  "output": "3\n2\n1\nGo!"
+ },
+ "if-else": {
+  "title": "Making choices with if and else",
+  "lines": [
+   "`if` lets your program make a choice. It checks something, and only runs the pushed-in lines when it's **True**.",
+   "`else` catches every other case: \"if it's raining, take an umbrella, **else** take sunglasses\".",
+   "Don't forget the colon `:` at the end of the `if` line, and the 4 spaces in front of the lines inside."
+  ],
+  "code": "count = 0\nif count == 0:\n    print(\"Lift-off!\")\nelse:\n    print(\"Wait...\")",
+  "output": "Lift-off!"
+ },
+ "comparisons": {
+  "title": "Comparing numbers",
+  "lines": [
+   "Python can compare things and answer **True** or **False**.",
+   "`==` asks \"is it equal?\" (two equals signs!). `<` means less than, `>` means greater than, and `!=` means not equal.",
+   "One `=` puts something in a box. Two `==` asks a question."
+  ],
+  "code": "print(5 > 3)\nprint(5 == 3)\nprint(5 != 3)",
+  "output": "True\nFalse\nTrue"
+ },
+ "turtle": {
+  "title": "Meet the turtle",
+  "lines": [
+   "The **turtle** is a little arrow that holds a pen. When it moves, it draws a line behind it.",
+   "`t.forward(100)` walks 100 steps. `t.right(90)` turns it right by 90 degrees, a quarter turn.",
+   "It starts in the middle of the stage, facing right."
+  ],
+  "code": "import turtle\nt = turtle.Turtle()\nt.forward(100)\nt.right(90)\nt.forward(50)",
+  "output": "An L shape: a line across, then a line down."
+ },
+ "angles": {
+  "title": "Turning by angles",
+  "lines": [
+   "Turns are measured in **degrees**. A full spin is 360 degrees.",
+   "90 is a quarter turn, which makes square corners. 120 makes triangles, because 3 × 120 = 360.",
+   "Change the angle by just one degree and the shape twists into a spiral. Try it!"
+  ],
+  "code": "for side in range(3):\n    t.forward(100)\n    t.right(120)",
+  "output": "A triangle."
+ },
+ "changing-variables": {
+  "title": "Variables that change in a loop",
+  "lines": [
+   "A variable can get a new value while the loop runs. `size = size + 5` takes what's in the box and adds 5.",
+   "Do that every time round the loop, and each line comes out a little longer than the one before.",
+   "That's the whole secret of a spiral!"
+  ],
+  "code": "size = 10\nfor i in range(4):\n    print(size)\n    size = size + 5",
+  "output": "10\n15\n20\n25"
+ },
+ "lists": {
+  "title": "Lists: lots of things in one box",
+  "lines": [
+   "A **list** keeps many things together, in order, inside square brackets `[ ]`, with commas between them.",
+   "`colours = [\"mint\", \"coral\", \"sky\"]` is one variable holding three colours.",
+   "You can loop over a list, pick from it, or add to it with `.append()`."
+  ],
+  "code": "snacks = [\"samosa\", \"vada pav\", \"idli\"]\nfor snack in snacks:\n    print(\"I love\", snack)",
+  "output": "I love samosa\nI love vada pav\nI love idli"
+ },
+ "random": {
+  "title": "Letting Python pick at random",
+  "lines": [
+   "`import random` brings in Python's dice-rolling tools.",
+   "`random.randint(1, 10)` picks a whole number from 1 to 10, and both ends can come up.",
+   "`random.choice(my_list)` picks one thing from a list. Run it again and you'll probably get something different!"
+  ],
+  "code": "import random\nprint(random.randint(1, 6))\nprint(random.choice([\"heads\", \"tails\"]))",
+  "output": "4\ntails   (yours will be different)"
+ },
+ "input": {
+  "title": "Asking the player with input()",
+  "lines": [
+   "`input(\"question\")` shows the question and waits for the player to type an answer and press Enter.",
+   "Whatever they type comes back as **text**, so you can keep it in a variable.",
+   "Your program pauses at that line until someone answers."
+  ],
+  "code": "name = input(\"What's your name? \")\nprint(\"Hi\", name)",
+  "output": "What's your name? Riff\nHi Riff"
+ },
+ "int-conversion": {
+  "title": "Turning typed text into a number",
+  "lines": [
+   "`input()` always gives back text, even if someone types `42`. Text can't be compared with numbers.",
+   "Wrap it in `int( )` to turn it into a whole number: `guess = int(input(\"Guess: \"))`.",
+   "Now Python can check if the guess is bigger or smaller."
+  ],
+  "code": "age = int(input(\"Age? \"))\nprint(age + 1)",
+  "output": "Age? 11\n12"
+ },
+ "while-loops": {
+  "title": "While loops: repeat until done",
+  "lines": [
+   "A `for` loop repeats a set number of times. A **while loop** repeats *as long as* something is True.",
+   "`while guess != secret:` means \"keep going while the guess is wrong\".",
+   "Make sure something inside the loop can change, or it will go on forever. (The Stop button rescues you!)"
+  ],
+  "code": "n = 1\nwhile n < 20:\n    print(n)\n    n = n * 2",
+  "output": "1\n2\n4\n8\n16"
+ },
+ "elif": {
+  "title": "More than two choices with elif",
+  "lines": [
+   "`elif` means \"else if\". It adds another check between `if` and `else`.",
+   "Python checks them from the top and runs only the **first** one that's True.",
+   "Too low? Too high? Just right? That's `if`, `elif`, `else`."
+  ],
+  "code": "temp = 38\nif temp > 35:\n    print(\"Hot!\")\nelif temp > 20:\n    print(\"Nice\")\nelse:\n    print(\"Brr\")",
+  "output": "Hot!"
+ },
+ "counters": {
+  "title": "Counting with a variable",
+  "lines": [
+   "A **counter** is a variable that starts at 0 and grows by 1 every time something happens.",
+   "`tries = tries + 1` inside a loop counts how many times round you went.",
+   "At the end, print it to show the score."
+  ],
+  "code": "claps = 0\nfor i in range(3):\n    claps = claps + 1\nprint(claps, \"claps\")",
+  "output": "3 claps"
+ },
+ "f-strings": {
+  "title": "f-strings: fill in the blanks",
+  "lines": [
+   "Put an `f` before the quotes and you can drop variables right into text with curly brackets `{ }`.",
+   "`f\"{hero} found a {thing}\"` builds a sentence from whatever is in those boxes.",
+   "It's like a fill-in-the-blanks worksheet that Python fills in for you."
+  ],
+  "code": "hero = \"Nix\"\nplace = \"Mars\"\nprint(f\"{hero} landed on {place}!\")",
+  "output": "Nix landed on Mars!"
+ },
+ "functions": {
+  "title": "Make your own command with def",
+  "lines": [
+   "A **function** is a recipe with a name. `def go_around():` starts the recipe, and the pushed-in lines are its steps.",
+   "Defining it doesn't run it. You run it by *calling* its name with brackets: `go_around()`.",
+   "Now you can use those steps again and again with one line."
+  ],
+  "code": "def cheer():\n    print(\"Hip hip\")\n    print(\"Hooray!\")\n\ncheer()\ncheer()",
+  "output": "Hip hip\nHooray!\nHip hip\nHooray!"
+ },
+ "sum-len": {
+  "title": "Adding up a list with sum() and len()",
+  "lines": [
+   "`sum(my_list)` adds up every number in a list.",
+   "`len(my_list)` tells you how many things are in the list.",
+   "Put them together and you can work out an average: `sum(...) / len(...)`."
+  ],
+  "code": "money = [20, 50, 30]\nprint(sum(money))\nprint(len(money))",
+  "output": "100\n3"
+ },
+ "charts": {
+  "title": "Drawing a chart",
+  "lines": [
+   "A chart turns a list of numbers into a picture, so you can see the pattern at a glance.",
+   "`stage.bar_chart(values, labels)` draws one bar per number. Add `goal=500` to draw a target line.",
+   "Bigger number, taller bar."
+  ],
+  "code": "stage.bar_chart([40, 90, 60], [\"Mon\", \"Tue\", \"Wed\"], goal=100)",
+  "output": "Three bars and a dashed goal line."
+ },
+ "sequences": {
+  "title": "Commands run in order",
+  "lines": [
+   "Python runs your lines **from top to bottom**, one at a time, like a recipe.",
+   "To drive a rover, you write the moves in the order you want them: forward, turn, forward.",
+   "Swap two lines and the rover goes somewhere completely different!"
+  ],
+  "code": "rover.forward(2)\nrover.turn(\"left\")\nrover.forward(1)",
+  "output": "Two squares ahead, a quarter turn left, one more square."
+ }
 }

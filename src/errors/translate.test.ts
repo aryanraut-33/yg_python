@@ -38,11 +38,37 @@ const cases: [string, PythonErrorInfo, string, string][] = [
   ['int-from-text', err('ValueError', "invalid literal for int() with base 10: 'abc'"), '', 'type a number'],
   ['divide-by-zero', err('ZeroDivisionError', 'division by zero'), '', 'divided by zero'],
   ['index-out-of-range', err('IndexError', 'list index out of range'), '', 'starts at 0'],
+  ['key-error', err('KeyError', "'score'"), '', 'dictionary'],
+  ['not-subscriptable', err('TypeError', "'int' object is not subscriptable"), '', 'square brackets'],
+  ['list-indices-type', err('TypeError', 'list indices must be integers or slices, not str'), '', 'whole number'],
+  ['not-iterable', err('TypeError', "'int' object is not iterable"), '', 'range()'],
+  ['string-index-range', err('IndexError', 'string index out of range'), '', 'letter'],
+  ['empty-sequence-choice', err('IndexError', 'Cannot choose from an empty sequence'), '', 'random.choice()'],
+  ['str-has-no-append', err('AttributeError', "'str' object has no attribute 'append'"), '', 'append()'],
+  ['list-has-no-split', err('AttributeError', "'list' object has no attribute 'split'"), '', '.split()'],
+  ['unsupported-operand-minus', err('TypeError', "unsupported operand type(s) for -: 'str' and 'int'"), '', 'subtract words'],
+  ['unsupported-operand-multiply', err('TypeError', "can't multiply sequence by non-int of type 'str'"), '', 'multiply'],
+  ['modulo-zero', err('ZeroDivisionError', 'integer modulo by zero'), '', 'divide by zero'],
+  ['math-domain-error', err('ValueError', 'math domain error'), '', 'maths command'],
+  ['range-float-error', err('TypeError', "'float' object cannot be interpreted as an integer"), '', 'range()'],
+  ['range-step-zero', err('ValueError', 'range() arg 3 must not be zero'), '', 'step size'],
+  ['cannot-assign-to-literal', err('SyntaxError', 'cannot assign to literal here. Maybe you meant \'==\' instead of \'=\'?'), '', 'left side of `=`'],
+  ['break-outside-loop', err('SyntaxError', "'break' outside loop"), '', '`break`'],
+  ['continue-outside-loop', err('SyntaxError', "'continue' outside loop"), '', '`continue`'],
+  ['return-outside-function', err('SyntaxError', "'return' outside function"), '', '`return`'],
+  ['duplicate-keyword-arg', err('SyntaxError', 'keyword argument repeated: color'), '', 'twice'],
+  ['format-string-syntax', err('SyntaxError', "f-string: unmatched '('"), '', 'f-string'],
+  ['unbound-local', err('UnboundLocalError', "cannot access local variable 'count' where it is not associated with a value", { name: 'count' }), '', 'starting value'],
+  ['module-not-found', err('ModuleNotFoundError', "No module named 'pygame'"), '', 'library'],
+  ['import-name-error', err('ImportError', "cannot import name 'foo' from 'math'"), '', 'command inside'],
+  ['turtle-attribute', err('AttributeError', "module 'turtle' has no attribute 'fd'", { name: 'fd', suggestion: 'forward' }), '', 'turtle.forward'],
+  ['rover-attribute', err('AttributeError', "module 'rover' has no attribute 'forwrd'", { name: 'forwrd', suggestion: 'forward' }), '', 'rover.forward'],
+  ['turtle-color-error', err('ValueError', 'bad color sequence: purp'), '', 'colour name'],
 ];
 
 describe('translateError', () => {
-  it('has at least 20 patterns', () => {
-    expect(ERROR_RULE_COUNT).toBeGreaterThanOrEqual(20);
+  it('has at least 50 patterns (Phase 2)', () => {
+    expect(ERROR_RULE_COUNT).toBeGreaterThanOrEqual(50);
   });
 
   for (const [id, info, line, expected] of cases) {
@@ -63,8 +89,8 @@ describe('translateError', () => {
   });
 
   it('falls back to Python\'s own words for unknown errors', () => {
-    const kid = translateError(err('KeyError', "'x'"), '');
+    const kid = translateError(err('SystemError', 'unexpected platform condition'), '');
     expect(kid.id).toBe('unknown');
-    expect(kid.message).toContain('KeyError');
+    expect(kid.message).toContain('SystemError');
   });
 });

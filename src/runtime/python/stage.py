@@ -1,4 +1,4 @@
-"""stage: draw and animate on the yg python stage.
+"""stage: draw and animate on the Tinkora stage.
 
 The stage is 640 wide and 400 tall. (0, 0) is the top-left corner,
 x grows to the right and y grows downwards.
@@ -44,6 +44,17 @@ COLORS = {
     "brown": "#A9744F",
     "grey": "#9AA8A2",
     "gray": "#9AA8A2",
+    # Names turtle programs often use
+    "gold": "#FFC94D",
+    "cyan": "#5BE0F0",
+    "magenta": "#FF5FD2",
+    "violet": "#A98BFF",
+    "indigo": "#6C6CFF",
+    "lime": "#B6F25C",
+    "teal": "#3FC1B0",
+    "navy": "#2E4A8C",
+    "silver": "#C9D1CE",
+    "maroon": "#B5475B",
 }
 
 # Bright colours that look good as lights (used by random_color()).
@@ -57,6 +68,9 @@ _MAX_HISTORY = 20000
 
 _batch = []
 _background = COLORS["night"]
+# True while a behaviour check re-runs the child's program behind the scenes:
+# drawing is still recorded, but nothing is sent to the screen and waits are skipped.
+_silent = False
 # Everything drawn during this run, for behaviour checks.
 _history = []
 
@@ -101,11 +115,11 @@ def _num(name, value):
 def flush():
     """Send everything drawn so far to the screen."""
     global _batch
-    if _batch:
+    if _batch and not _silent:
         import json
 
         _yg.stage_flush(json.dumps(_batch))
-        _batch = []
+    _batch = []
 
 
 def _discard():
@@ -196,9 +210,96 @@ def wait(seconds):
         raise ValueError("wait() needs a number of seconds that is 0 or more")
     _record(["wait", seconds])
     flush()
-    _yg.sleep(seconds)
+    if not _silent:
+        _yg.sleep(seconds)
 
 
 def random_color():
     """Pick a random bright light colour, like "mint" or "coral"."""
     return _random.choice(LIGHT_COLORS)
+
+
+# ---------- Sprites: little ready-made pictures ----------
+
+SPRITES = (
+    "rocket",
+    "flame",
+    "smoke",
+    "star",
+    "planet",
+    "moon",
+    "cloud",
+    "heart",
+    "coin",
+    "rover",
+    "probe",
+    "base",
+    "crater",
+    "flag",
+)
+
+
+def sprite(name, x, y, size=1, angle=0):
+    """Draw a ready-made picture centred on (x, y), such as "rocket" or "star".
+
+    size=2 makes it twice as big. angle turns it (in degrees, clockwise).
+    """
+    key = str(name).strip().lower()
+    if key not in SPRITES:
+        names = ", ".join(f'"{n}"' for n in SPRITES)
+        raise ValueError(f'The stage doesn\'t have a sprite called "{name}". Try one of: {names}')
+    _push(["sprite", key, _num("x", x), _num("y", y), max(0.1, _num("size", size)), _num("angle", angle)])
+
+
+# ---------- Speech ----------
+
+
+def speak(words):
+    """Read words out loud using the computer's voice (nothing leaves the device)."""
+    words = str(words)[:600]
+    _push(["speak", words])
+
+
+# ---------- Charts ----------
+
+
+def bar_chart(values, labels=None, color="mint", goal=None, title=None, highlight=None):
+    """Draw a bar chart that fills the stage.
+
+    values:    a list of numbers, one bar each
+    labels:    a list of words under the bars (optional)
+    goal:      a number to draw as a dashed target line (optional)
+    title:     words at the top (optional)
+    highlight: the position of one bar to draw in a different colour (optional)
+    """
+    if not isinstance(values, (list, tuple)) or len(values) == 0:
+        raise TypeError("bar_chart() needs a list of numbers, like [50, 80, 120]")
+    nums = [_num(f"values[{i}]", v) for i, v in enumerate(values)]
+    if labels is not None and len(labels) != len(nums):
+        raise ValueError(f"bar_chart() got {len(nums)} values but {len(labels)} labels. They should match.")
+    bar_color = _color(color)
+    top = max(nums + ([_num("goal", goal)] if goal is not None else []) + [1])
+    left, right, y_top, y_base = 56.0, 616.0, 64.0 if title else 34.0, 340.0
+    plot_h = y_base - y_top
+    if title:
+        text(WIDTH / 2, 30, title, size=22, color="cream")
+    line(left, y_base, right, y_base, "grey", 2)
+    slot = (right - left) / len(nums)
+    width = max(4.0, slot * 0.62)
+    for i, v in enumerate(nums):
+        h = max(0.0, v) / top * plot_h
+        x = left + slot * i + (slot - width) / 2
+        fill = COLORS["coral"] if highlight == i else bar_color
+        _push(["rect", round(x, 2), round(y_base - h, 2), round(width, 2), round(h, 2), fill, 0.0])
+        if len(nums) <= 16:
+            shown = int(v) if float(v).is_integer() else round(v, 1)
+            text(x + width / 2, y_base - h - 12, shown, size=13, color="cream", font="mono")
+        if labels is not None and len(nums) <= 16:
+            text(x + width / 2, y_base + 18, labels[i], size=12, color="grey", font="mono")
+    if goal is not None:
+        gy = y_base - _num("goal", goal) / top * plot_h
+        x = left
+        while x < right:
+            line(x, gy, min(x + 10, right), gy, "butter", 2)
+            x += 18
+        text(right, gy - 12, f"goal {goal}", size=13, color="butter", align="right", font="mono")

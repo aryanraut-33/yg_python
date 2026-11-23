@@ -1,0 +1,249 @@
+{
+  "formatVersion": 1,
+  "id": "spiral-art",
+  "title": "Spiral Art",
+  "pitch": "Loops make real art.",
+  "level": 1,
+  "category": "art",
+  "support": "fill",
+  "sessions": 2,
+  "concepts": [
+    "turtle",
+    "for-loops",
+    "angles",
+    "changing-variables",
+    "lists",
+    "random"
+  ],
+  "needs": [
+    "stage",
+    "turtle"
+  ],
+  "phoneFriendly": true,
+  "words": {
+    "intro": "Teach a **turtle** to draw. Start with a square, then change one number and watch it twist into a galaxy.",
+    "finished": "Every line of that spiral came from your loop.",
+    "replay": "Draw my spiral again",
+    "tinker": "Keep tinkering: try angles like 59, 89, 121 or 144, and press Save picture under the stage to keep your favourite."
+  },
+  "files": {
+    "starter": "step-1-predict.py",
+    "solution": "solution.py"
+  },
+  "milestones": [
+    {
+      "id": "first-shapes",
+      "title": "Draw a shape",
+      "goal": "A square and a triangle, drawn by your turtle.",
+      "concepts": [
+        "turtle",
+        "angles",
+        "for-loops"
+      ],
+      "steps": [
+        {
+          "id": "predict-turtle",
+          "type": "predict",
+          "introduces": [
+            "turtle"
+          ],
+          "instruction": "Meet the turtle! It starts in the middle, facing right. What will this code draw? Pick your guess, then press **Run**.",
+          "code": "step-1-predict.py",
+          "choices": [
+            "An L shape: a line across, then a line down",
+            "A whole square",
+            "One long straight line",
+            "A circle"
+          ],
+          "answer": 0,
+          "explain": "The turtle walks 100 steps, turns **right** by 90 degrees (a quarter turn), then walks 100 more. Two lines with a corner: an L!",
+          "check": {
+            "kind": "runs",
+            "description": "Your turtle drew its first lines!"
+          },
+          "hints": [
+            "Read the code one line at a time, like instructions for a robot.",
+            "`forward(100)` walks and draws. `right(90)` turns a quarter turn without moving.",
+            "`t.forward(50)` then `t.left(90)` then `t.forward(50)` would draw a corner going up.",
+            "It walks across, turns right (so now it faces ______), and walks again.",
+            "It draws an L: a line across, then a line down. Pick that answer and press Run."
+          ]
+        },
+        {
+          "id": "square",
+          "type": "build",
+          "instruction": "Finish the square! A square has **4 sides** and **4 corners**. Add more `t.right(90)` and `t.forward(100)` lines until the turtle gets back to where it started.",
+          "check": {
+            "kind": "python",
+            "file": "check-square.py",
+            "description": "A perfect square!"
+          },
+          "hints": [
+            "You have 2 sides. Add lines at the bottom of your code.",
+            "Each side is `t.forward(100)` and each corner is `t.right(90)`.",
+            "After the second side: `t.right(90)` then `t.forward(100)` draws side 3.",
+            "Add: `t.right(90)`, `t.forward(100)`, `t.right(___)`, `t.forward(___)`.",
+            "Add these 4 lines: `t.right(90)`, `t.forward(100)`, `t.right(90)`, `t.forward(100)`."
+          ]
+        },
+        {
+          "id": "triangle",
+          "type": "fill",
+          "introduces": [
+            "angles"
+          ],
+          "instruction": "Now a **loop** draws the sides for you. This one draws 3 sides. Fill the blank with the turn that makes a triangle.",
+          "code": "step-3-fill.py",
+          "check": {
+            "kind": "python",
+            "file": "check-triangle.py",
+            "description": "A triangle! 3 × 120 = 360."
+          },
+          "hints": [
+            "The blank is the angle in `t.right(___)`.",
+            "To get back to the start, all the turns must add up to one full spin: 360 degrees.",
+            "A square has 4 turns of 90, because 4 × 90 = 360.",
+            "A triangle has 3 turns, so each turn is 360 ÷ 3 = ___.",
+            "`t.right(120)`. Run it, then try `range(5)` with `t.right(72)` for a pentagon!"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "spiral",
+      "title": "Grow a spiral",
+      "goal": "A spiral that grows and twists.",
+      "concepts": [
+        "changing-variables",
+        "angles"
+      ],
+      "steps": [
+        {
+          "id": "predict-spiral",
+          "type": "predict",
+          "introduces": [
+            "changing-variables"
+          ],
+          "instruction": "Look at `size = size + 5` inside the loop. What do you think the turtle will draw?",
+          "code": "step-4-predict.py",
+          "choices": [
+            "A square spiral that grows outwards",
+            "40 squares on top of each other",
+            "A circle",
+            "One straight line"
+          ],
+          "answer": 0,
+          "explain": "Each time round the loop, `size` grows by 5, so every line is a bit longer than the last. Turn 90° each time and you get a square spiral.",
+          "check": {
+            "kind": "runs",
+            "description": "A growing spiral!"
+          },
+          "hints": [
+            "Watch what happens to `size` each time round the loop.",
+            "`size = size + 5` takes what's in the box and adds 5.",
+            "First line: 5 steps. Next: 10. Then 15…",
+            "The lines get ______ and the turtle turns 90° each time.",
+            "A square spiral that grows outwards. Pick that answer and press Run."
+          ]
+        },
+        {
+          "id": "bend",
+          "type": "build",
+          "instruction": "Here's the magic trick: change the angle in `t.right(90)` to **91**. Then try others, like 89, 121 or 144!",
+          "check": {
+            "kind": "python",
+            "file": "check-bend.py",
+            "description": "One degree turned a square into a galaxy!"
+          },
+          "hints": [
+            "There's only one angle in the code: inside `t.right(...)`.",
+            "When the angle isn't exactly 90, each square comes out a little bit twisted.",
+            "`t.right(60)` makes a hexagon spiral.",
+            "`t.right(__)`: try a number close to 90, but not 90.",
+            "Change it to `t.right(91)` and Run. Then try 121!"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "colour",
+      "title": "Add colour",
+      "goal": "A rainbow spiral that's different every run.",
+      "concepts": [
+        "lists",
+        "random"
+      ],
+      "steps": [
+        {
+          "id": "random-colours",
+          "type": "fill",
+          "introduces": [
+            "lists",
+            "random"
+          ],
+          "instruction": "Now there's a **list** of colours. `random.choice(...)` picks one from a list. Fill the blank with the name of the list.",
+          "code": "step-6-fill.py",
+          "check": {
+            "kind": "python",
+            "file": "check-colours.py",
+            "description": "A rainbow spiral!"
+          },
+          "hints": [
+            "The blank is inside `random.choice(___)`.",
+            "`random.choice` needs a list to pick from. The list is stored in a variable.",
+            "`random.choice(snacks)` would pick from a list called snacks.",
+            "`random.choice(c______)`",
+            "`t.color(random.choice(colours))`. Run it twice: is it the same both times?"
+          ]
+        },
+        {
+          "id": "your-design",
+          "type": "make-it-yours",
+          "instruction": "Make it your design: change the colours in the list, the angle, or how many lines (`range(80)`). Find one you love, then press **Save picture** under the stage.",
+          "check": {
+            "kind": "python",
+            "file": "check-yours.py",
+            "description": "That's an original. Save it as a poster!"
+          },
+          "hints": [
+            "You can change the list, the angle, the size step or the range.",
+            "Colours need quotes and commas between them, like `[\"gold\", \"cyan\"]`.",
+            "`colours = [\"gold\", \"cyan\", \"magenta\"]` gives a neon spiral.",
+            "Try `t.right(___)` with 59, 121 or 144.",
+            "Change the list to `[\"gold\", \"cyan\", \"magenta\"]` and the angle to `t.right(121)`, then Run."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "artist",
+      "title": "Think like an artist",
+      "goal": "Know which number made the magic.",
+      "concepts": [
+        "angles"
+      ],
+      "steps": [
+        {
+          "id": "recall-angle",
+          "type": "recall",
+          "instruction": "Quick question before you go. Which change turned the square into a twisting galaxy?",
+          "choices": [
+            "Changing the angle from 90 to 91",
+            "Adding colours",
+            "Making the turtle faster",
+            "Using a bigger range"
+          ],
+          "answer": 0,
+          "explain": "Just one degree! When the turn isn't a clean 90, every square comes out slightly rotated, and together they twist into a galaxy.",
+          "hints": [
+            "Think back to the step where the square spiral became a galaxy.",
+            "Colours change how it looks, but not its shape.",
+            "The shape comes from how far the turtle walks and how much it turns.",
+            "It was a number inside `t.right(...)`.",
+            "Changing the angle from 90 to 91."
+          ]
+        }
+      ]
+    }
+  ]
+}

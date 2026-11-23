@@ -17,7 +17,8 @@ export interface KidError {
 interface Rule {
   id: string;
   match(e: PythonErrorInfo, lineText: string): boolean;
-  build(e: PythonErrorInfo, lineText: string): { message: string; tip: string };
+  /** `title` replaces the usual "Python got confused" heading. */
+  build(e: PythonErrorInfo, lineText: string): { message: string; tip: string; title?: string };
 }
 
 const at = (e: PythonErrorInfo) => (e.line !== null ? ` on line ${e.line}` : '');
@@ -26,6 +27,22 @@ const has = (e: PythonErrorInfo, s: string | RegExp) =>
 const quoteChars = /[“”‘’]/;
 
 const RULES: Rule[] = [
+  // ---------- Mars rover events (not Python mistakes: the mission went wrong) ----------
+  {
+    id: 'rover-stuck',
+    match: (e) => e.type === 'RoverStuck',
+    build: (e) => ({ title: 'The rover is stuck', message: e.message, tip: 'Trace the route square by square with your finger. Where does it cross a crater?' }),
+  },
+  {
+    id: 'rover-off-map',
+    match: (e) => e.type === 'RoverOffMap',
+    build: (e) => ({ title: 'The rover reached the edge', message: e.message, tip: 'Check the number in `rover.forward(...)` on this line, and which way the rover is facing.' }),
+  },
+  {
+    id: 'rover-battery',
+    match: (e) => e.type === 'BatteryEmpty',
+    build: (e) => ({ title: 'The rover ran out of battery', message: e.message, tip: 'Every square costs 3% and every turn costs 1%. Look for a route with fewer squares.' }),
+  },
   // ---------- Blanks left in fill-in steps ----------
   {
     id: 'blank-left',
@@ -35,7 +52,7 @@ const RULES: Rule[] = [
       tip: 'Replace the `___` with your answer, then press Run again.',
     }),
   },
-  // ---------- Names ----------
+  // ---------- Names & Variables ----------
   {
     id: 'name-typo',
     match: (e) => e.type === 'NameError' && !!e.suggestion,
@@ -53,6 +70,14 @@ const RULES: Rule[] = [
     }),
   },
   {
+    id: 'unbound-local',
+    match: (e) => e.type === 'UnboundLocalError',
+    build: (e) => ({
+      message: `Python tried to use \`${e.name ?? 'a variable'}\` before it was given a value on this side of the function.`,
+      tip: 'Give the variable a starting value with `=` before using or changing it.',
+    }),
+  },
+  {
     id: 'name-unknown',
     match: (e) => e.type === 'NameError',
     build: (e) => ({
@@ -60,6 +85,7 @@ const RULES: Rule[] = [
       tip: 'Check the spelling. If it\'s a variable, make sure it gets a value (with `=`) on a line above this one. If it\'s text, put quotes around it.',
     }),
   },
+  // ---------- Attributes (Modules & Simulators first, then generic) ----------
   {
     id: 'stage-attribute',
     match: (e) => e.type === 'AttributeError' && /module 'stage'/.test(e.message),
@@ -71,6 +97,42 @@ const RULES: Rule[] = [
     }),
   },
   {
+    id: 'turtle-attribute',
+    match: (e) => e.type === 'AttributeError' && /module 'turtle'/.test(e.message),
+    build: (e) => ({
+      message: e.suggestion
+        ? `Turtle doesn't have \`${e.name}\`. Did you mean \`turtle.${e.suggestion}\`?`
+        : `Turtle doesn't have \`${e.name}\`.`,
+      tip: 'Check the command after `turtle.`. Common commands include `forward`, `backward`, `left`, `right`, `circle`, `penup`, `pendown` and `color`.',
+    }),
+  },
+  {
+    id: 'rover-attribute',
+    match: (e) => e.type === 'AttributeError' && /module 'rover'/.test(e.message),
+    build: (e) => ({
+      message: e.suggestion
+        ? `The rover doesn't have \`${e.name}\`. Did you mean \`rover.${e.suggestion}\`?`
+        : `The rover doesn't have \`${e.name}\`.`,
+      tip: 'Check the command after `rover.`. Commands include `mission`, `forward`, `turn`, `battery` and `scan`.',
+    }),
+  },
+  {
+    id: 'str-has-no-append',
+    match: (e) => e.type === 'AttributeError' && has(e, "'str' object has no attribute 'append'"),
+    build: () => ({
+      message: '`append()` adds items to a list `[ ]`, not to text.',
+      tip: 'To add text to text, use `+`, like `name = name + "!"`. Use `.append()` only for lists.',
+    }),
+  },
+  {
+    id: 'list-has-no-split',
+    match: (e) => e.type === 'AttributeError' && has(e, "'list' object has no attribute 'split'"),
+    build: () => ({
+      message: '`split()` breaks text into a list, but this variable is already a list.',
+      tip: 'Only text has `.split()`. If you already have a list, you can use its items directly.',
+    }),
+  },
+  {
     id: 'attribute',
     match: (e) => e.type === 'AttributeError',
     build: (e) => ({
@@ -78,7 +140,7 @@ const RULES: Rule[] = [
       tip: 'Check the spelling of the word after the dot.',
     }),
   },
-  // ---------- Errors raised by the stage library (already in kid language) ----------
+  // ---------- Stage & Turtle arguments ----------
   {
     id: 'stage-argument',
     match: (e) => !!e.fromStage && (e.type === 'ValueError' || e.type === 'TypeError'),
@@ -87,7 +149,15 @@ const RULES: Rule[] = [
       tip: 'Look at the stage command on this line and check what\'s inside the brackets.',
     }),
   },
-  // ---------- Syntax ----------
+  {
+    id: 'turtle-color-error',
+    match: (e) => e.type === 'ValueError' && has(e, /bad color sequence|unknown color/),
+    build: () => ({
+      message: 'Turtle doesn\'t recognize that colour name.',
+      tip: 'Use colour names like `"red"`, `"blue"`, `"coral"`, `"mint"`, `"butter"`, or a hex code like `"#FFD66B"`.',
+    }),
+  },
+  // ---------- Syntax (specific patterns must precede syntax-generic) ----------
   {
     id: 'curly-quotes',
     match: (e, line) => (e.type === 'SyntaxError' && has(e, 'invalid character')) || (e.type === 'SyntaxError' && quoteChars.test(line)),
@@ -129,6 +199,14 @@ const RULES: Rule[] = [
     }),
   },
   {
+    id: 'format-string-syntax',
+    match: (e) => e.type === 'SyntaxError' && has(e, /f-string: /),
+    build: () => ({
+      message: 'Something inside your f-string `f"..."` is out of place.',
+      tip: 'Check the curly brackets `{ }` inside your f-string. Make sure variable names are inside them.',
+    }),
+  },
+  {
     id: 'extra-bracket',
     match: (e) => e.type === 'SyntaxError' && has(e, /unmatched '.'|does not match opening parenthesis/),
     build: () => ({
@@ -142,6 +220,46 @@ const RULES: Rule[] = [
     build: () => ({
       message: 'One `=` puts a value in a box. Two `==` check if two things are the same.',
       tip: 'Inside an `if`, use `==` to compare, like `if score == 10:`.',
+    }),
+  },
+  {
+    id: 'cannot-assign-to-literal',
+    match: (e) => e.type === 'SyntaxError' && has(e, /cannot assign to (literal|expression|operator)/),
+    build: () => ({
+      message: 'The variable name must be on the left side of `=`, and the value on the right.',
+      tip: 'Swap them around, like `score = 10`, not `10 = score`.',
+    }),
+  },
+  {
+    id: 'break-outside-loop',
+    match: (e) => e.type === 'SyntaxError' && has(e, "'break' outside loop"),
+    build: () => ({
+      message: '`break` can only be used inside a `for` or `while` loop to stop it early.',
+      tip: 'Make sure the line with `break` is pushed in with 4 spaces inside a loop.',
+    }),
+  },
+  {
+    id: 'continue-outside-loop',
+    match: (e) => e.type === 'SyntaxError' && has(e, "'continue' outside loop"),
+    build: () => ({
+      message: '`continue` can only be used inside a loop to skip to the next round.',
+      tip: 'Make sure the line with `continue` is indented inside a `for` or `while` loop.',
+    }),
+  },
+  {
+    id: 'return-outside-function',
+    match: (e) => e.type === 'SyntaxError' && has(e, "'return' outside function"),
+    build: () => ({
+      message: '`return` can only send a value back from inside a function made with `def`.',
+      tip: 'Make sure `return` is inside a `def function_name():` block, indented with 4 spaces.',
+    }),
+  },
+  {
+    id: 'duplicate-keyword-arg',
+    match: (e) => e.type === 'SyntaxError' && has(e, 'keyword argument repeated'),
+    build: () => ({
+      message: 'A named setting was given twice to the same command.',
+      tip: 'Look inside the brackets and make sure each setting name (like `color=`) only appears once.',
     }),
   },
   {
@@ -184,13 +302,143 @@ const RULES: Rule[] = [
       tip: 'Check for missing quotes, brackets, colons or commas. Compare it with the example in the step.',
     }),
   },
-  // ---------- Types and values ----------
+  // ---------- Modules & Imports ----------
+  {
+    id: 'module-not-found',
+    match: (e) => e.type === 'ModuleNotFoundError' || (e.type === 'ImportError' && has(e, 'No module named')),
+    build: () => ({
+      message: 'Python couldn\'t find a library with that name.',
+      tip: 'Check the spelling after `import`. Available libraries include `stage`, `turtle`, `rover`, `random`, `math`, and `time`.',
+    }),
+  },
+  {
+    id: 'import-name-error',
+    match: (e) => e.type === 'ImportError' && has(e, 'cannot import name'),
+    build: () => ({
+      message: 'Python couldn\'t find that command inside the imported library.',
+      tip: 'Check the spelling of the command name after `import`.',
+    }),
+  },
+  // ---------- Collections & Subscripting ----------
+  {
+    id: 'key-error',
+    match: (e) => e.type === 'KeyError',
+    build: (e) => ({
+      message: `Python looked for the key ${e.message} in a dictionary, but couldn't find it.`,
+      tip: 'Check the spelling of the key inside `[ ]`, or check what keys were added to the dictionary.',
+    }),
+  },
+  {
+    id: 'string-index-range',
+    match: (e) => e.type === 'IndexError' && has(e, 'string index out of range'),
+    build: () => ({
+      message: 'Python tried to pick a letter past the end of the text. Counting starts at 0.',
+      tip: 'Check the number inside `[ ]`. For a word with 4 letters, the last letter is at index `3`.',
+    }),
+  },
+  {
+    id: 'empty-sequence-choice',
+    match: (e) => e.type === 'IndexError' && has(e, 'Cannot choose from an empty sequence'),
+    build: () => ({
+      message: '`random.choice()` tried to pick an item from an empty list.',
+      tip: 'Make sure your list has at least one item inside `[ ]` before picking from it.',
+    }),
+  },
+  {
+    id: 'index-out-of-range',
+    match: (e) => e.type === 'IndexError',
+    build: () => ({
+      message: 'Python tried to get an item that isn\'t there. Counting starts at 0, so the last item of 5 is number 4.',
+      tip: 'Check the number inside the square brackets `[ ]`.',
+    }),
+  },
+  {
+    id: 'list-indices-type',
+    match: (e) => e.type === 'TypeError' && has(e, /list indices must be integers or slices/),
+    build: () => ({
+      message: 'A list index inside `[ ]` must be a whole number like `0` or `1`, not text or a decimal.',
+      tip: 'Check what\'s inside the square brackets. Make sure it\'s a whole number, like `items[0]`.',
+    }),
+  },
+  {
+    id: 'not-subscriptable',
+    match: (e) => e.type === 'TypeError' && has(e, 'object is not subscriptable'),
+    build: () => ({
+      message: 'Python tried to use square brackets `[ ]` on something that isn\'t a list, dictionary or text (like a number).',
+      tip: 'Only lists, text and dictionaries have items you can pick out with `[ ]`. Check the variable before the brackets.',
+    }),
+  },
+  {
+    id: 'not-iterable',
+    match: (e) => e.type === 'TypeError' && has(e, 'object is not iterable'),
+    build: () => ({
+      message: 'Python tried to loop over a single value that can\'t be stepped through (like a plain number).',
+      tip: 'To count up with a loop, use `range()`, like `for i in range(5):`.',
+    }),
+  },
+  // ---------- Types, Operations & Maths ----------
   {
     id: 'add-text-number',
-    match: (e) => e.type === 'TypeError' && has(e, /can only concatenate str|unsupported operand type\(s\) for \+: '(int|float)' and 'str'|'str' and '(int|float)'/),
+    match: (e) => e.type === 'TypeError' && has(e, /can only concatenate str|unsupported operand type\(s\) for \+: ('(int|float)' and 'str'|'str' and '(int|float)')/),
     build: () => ({
       message: 'Python can\'t use `+` to join words and numbers together.',
       tip: 'In `print`, use a comma instead: `print("Score:", score)`. Or turn the number into text with `str(score)`.',
+    }),
+  },
+  {
+    id: 'unsupported-operand-minus',
+    match: (e) => e.type === 'TypeError' && has(e, /unsupported operand type\(s\) for -:/),
+    build: () => ({
+      message: 'Python can\'t use `-` to subtract words or text.',
+      tip: 'Check the values on both sides of `-`. Make sure both are numbers.',
+    }),
+  },
+  {
+    id: 'unsupported-operand-multiply',
+    match: (e) => e.type === 'TypeError' && has(e, /can't multiply sequence by non-int|unsupported operand type\(s\) for \*:/),
+    build: () => ({
+      message: 'Python can only multiply numbers, or repeat a word by multiplying it with a whole number.',
+      tip: 'Check the values around `*`. If one is text, the other must be a whole number, like `"★" * 5`.',
+    }),
+  },
+  {
+    id: 'modulo-zero',
+    match: (e) => e.type === 'ZeroDivisionError' && has(e, 'integer modulo by zero'),
+    build: () => ({
+      message: 'Python can\'t find the remainder with `% 0`. You can never divide by zero.',
+      tip: 'Change the number after `%` to a number greater than 0, like `score % 2`.',
+    }),
+  },
+  {
+    id: 'divide-by-zero',
+    match: (e) => e.type === 'ZeroDivisionError',
+    build: () => ({
+      message: 'Nothing can be divided by zero, not even by Python.',
+      tip: 'Check the number after `/` on this line. Make sure it can never be 0.',
+    }),
+  },
+  {
+    id: 'math-domain-error',
+    match: (e) => e.type === 'ValueError' && has(e, 'math domain error'),
+    build: () => ({
+      message: 'A maths command got a number that isn\'t possible (like the square root of a negative number).',
+      tip: 'Check the number inside the maths command and make sure it is 0 or greater.',
+    }),
+  },
+  {
+    id: 'range-float-error',
+    match: (e) => e.type === 'TypeError' && has(e, /'float' object cannot be interpreted as an integer/),
+    build: () => ({
+      message: '`range()` needs whole numbers to count steps, but it got a decimal number.',
+      tip: 'Use whole numbers inside `range()`, like `range(5)` instead of `range(5.5)`.',
+    }),
+  },
+  {
+    id: 'range-step-zero',
+    match: (e) => e.type === 'ValueError' && has(e, 'range() arg 3 must not be zero'),
+    build: () => ({
+      message: 'The step size in `range(start, stop, step)` cannot be 0, or Python will never move forward.',
+      tip: 'Change the third number in `range()` to `1`, `2`, or `-1`.',
     }),
   },
   {
@@ -218,22 +466,6 @@ const RULES: Rule[] = [
     }),
   },
   {
-    id: 'divide-by-zero',
-    match: (e) => e.type === 'ZeroDivisionError',
-    build: () => ({
-      message: 'Nothing can be divided by zero, not even by Python.',
-      tip: 'Check the number after `/` on this line. Make sure it can never be 0.',
-    }),
-  },
-  {
-    id: 'index-out-of-range',
-    match: (e) => e.type === 'IndexError',
-    build: () => ({
-      message: 'Python tried to get an item that isn\'t there. Counting starts at 0, so the last item of 5 is number 4.',
-      tip: 'Check the number inside the square brackets `[ ]`.',
-    }),
-  },
-  {
     id: 'too-deep',
     match: (e) => e.type === 'RecursionError',
     build: () => ({
@@ -248,8 +480,8 @@ export function translateError(e: PythonErrorInfo, code: string): KidError {
   const rule = RULES.find((r) => r.match(e, lineText));
   const titlePrefix = e.fromStage ? 'The stage got confused' : 'Python got confused';
   if (rule) {
-    const { message, tip } = rule.build(e, lineText);
-    return { id: rule.id, title: `${titlePrefix}${at(e)}`, message, tip, line: e.line };
+    const { message, tip, title } = rule.build(e, lineText);
+    return { id: rule.id, title: `${title ?? titlePrefix}${at(e)}`, message, tip, line: e.line };
   }
   return {
     id: 'unknown',

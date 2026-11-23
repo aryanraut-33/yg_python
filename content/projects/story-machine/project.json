@@ -1,0 +1,244 @@
+{
+  "formatVersion": 1,
+  "id": "story-machine",
+  "title": "Story Machine",
+  "pitch": "Write a story that writes itself.",
+  "level": 1,
+  "category": "words",
+  "support": "fill",
+  "sessions": 2,
+  "concepts": [
+    "lists",
+    "random",
+    "f-strings",
+    "functions",
+    "variables"
+  ],
+  "needs": [
+    "stage",
+    "sound"
+  ],
+  "phoneFriendly": true,
+  "words": {
+    "intro": "Fill a machine with **your own** heroes, places and problems. Every time you press Run, it writes (and reads aloud) a brand-new story.",
+    "finished": "Your machine can write more stories than you could read in a year.",
+    "replay": "Tell me a story",
+    "tinker": "Keep tinkering: add more words to every list (more words = more stories), or add a fifth list of villains."
+  },
+  "files": {
+    "starter": "step-1-predict.py",
+    "solution": "solution.py"
+  },
+  "milestones": [
+    {
+      "id": "word-lists",
+      "title": "Make word lists",
+      "goal": "Lists of your own heroes and places.",
+      "concepts": [
+        "lists",
+        "random",
+        "f-strings"
+      ],
+      "steps": [
+        {
+          "id": "predict-list",
+          "type": "predict",
+          "introduces": [
+            "lists"
+          ],
+          "instruction": "A **list** holds lots of things in one box. What will these two `print` lines show?",
+          "code": "step-1-predict.py",
+          "choices": [
+            "a brave cat, then 3",
+            "Dadi, then 3",
+            "a brave cat, then 2",
+            "An error"
+          ],
+          "answer": 0,
+          "explain": "Python counts list positions from **0**, so `heroes[0]` is the first one: a brave cat. `len(heroes)` counts the items: 3.",
+          "check": {
+            "kind": "output-contains",
+            "value": "3",
+            "description": "You opened the list box!"
+          },
+          "hints": [
+            "Look at `heroes[0]` and `len(heroes)`.",
+            "The number in square brackets picks an item. Python starts counting at 0, not 1.",
+            "In `[\"red\", \"blue\"]`, item `[0]` is red and `[1]` is blue.",
+            "`heroes[0]` is the ______ item, and `len` counts how many there are.",
+            "a brave cat, then 3. Pick that and Run."
+          ]
+        },
+        {
+          "id": "predict-sentence",
+          "type": "predict",
+          "introduces": [
+            "random",
+            "f-strings"
+          ],
+          "instruction": "Now two lists and an **f-string**. What do you think it prints?",
+          "code": "step-2-predict.py",
+          "choices": [
+            "A sentence with a random hero and place, often different each Run",
+            "Once upon a time, {hero} went to {place}.",
+            "Exactly the same sentence every time",
+            "An error"
+          ],
+          "answer": 0,
+          "explain": "`random.choice` picks one item from a list. The `f` before the quotes fills each `{ }` with what's in that variable. Run it again for a new sentence!",
+          "check": {
+            "kind": "output-contains",
+            "value": "Once upon a time",
+            "description": "Your first machine-made sentence!"
+          },
+          "hints": [
+            "Notice the little `f` just before the quotes in the print line.",
+            "In an f-string, `{hero}` is swapped for whatever is in the hero variable.",
+            "`name = \"Riff\"` then `print(f\"Hi {name}\")` prints Hi Riff.",
+            "It picks a random ____ and a random place and fills them in.",
+            "A sentence with a random hero and place, often different each Run. Pick that and Run it a few times."
+          ]
+        },
+        {
+          "id": "own-lists",
+          "type": "make-it-yours",
+          "instruction": "Make the machine yours: swap in your **own** heroes and places, at least 3 of each. Silly is good! Keep the quotes and commas.",
+          "check": {
+            "kind": "python",
+            "file": "check-own-lists.py",
+            "description": "Your words are in the machine!"
+          },
+          "hints": [
+            "Change the words inside the square brackets of `heroes` and `places`.",
+            "Each item needs quotes, and commas go between items.",
+            "`heroes = [\"my cousin Ria\", \"a sleepy lion\", \"Captain Chai\"]`",
+            "`places = [\"______\", \"______\", \"______\"]`",
+            "`heroes = [\"my cousin Ria\", \"a sleepy lion\", \"Captain Chai\"]` and `places = [\"Goa beach\", \"a secret cave\", \"the school bus\"]`."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-story",
+      "title": "Build the story",
+      "goal": "Three sentences: a start, a problem and a twist.",
+      "concepts": [
+        "lists",
+        "random",
+        "f-strings"
+      ],
+      "steps": [
+        {
+          "id": "problems",
+          "type": "build",
+          "instruction": "Every story needs trouble. Add a list called `problems` (like `\"lost their shoes\"`), pick one with `problem = random.choice(problems)`, and print a second sentence: `print(f\"But oh no, {hero} {problem}!\")`",
+          "check": {
+            "kind": "python",
+            "file": "check-problems.py",
+            "description": "Uh-oh. Now there's trouble!"
+          },
+          "hints": [
+            "You need 3 new lines: the list, the choice, and the print.",
+            "Copy the pattern of `places`: a list, then `random.choice`, then use it in an f-string.",
+            "`snacks = [\"chips\", \"laddoo\"]`, then `snack = random.choice(snacks)`, then `print(f\"{hero} ate {snack}\")`.",
+            "`problems = [\"...\", \"...\", \"...\"]`, `problem = random.choice(______)`, `print(f\"But oh no, {hero} {______}!\")`",
+            "Add: `problems = [\"lost their shoes\", \"met a grumpy elephant\", \"forgot the way home\"]`, then `problem = random.choice(problems)`, then `print(f\"But oh no, {hero} {problem}!\")`."
+          ]
+        },
+        {
+          "id": "twists",
+          "type": "build",
+          "instruction": "Now a twist ending! Add a `twists` list (like `\"it was all a dream\"`), pick one, and print a third sentence: `print(f\"Then, {twist}.\")`",
+          "check": {
+            "kind": "python",
+            "file": "check-twists.py",
+            "description": "Three sentences, endless stories!"
+          },
+          "hints": [
+            "Same pattern as problems: a list, a choice, a print.",
+            "Each part of the story has its own list and its own `random.choice`.",
+            "`twist = random.choice(twists)` picks the ending.",
+            "`twists = [\"...\", \"...\", \"...\"]`, `twist = random.choice(twists)`, `print(f\"Then, {______}.\")`",
+            "Add: `twists = [\"a dragon said sorry\", \"it was all a dream\", \"everyone got ice cream\"]`, `twist = random.choice(twists)` and `print(f\"Then, {twist}.\")`."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "machine",
+      "title": "Make it a machine",
+      "goal": "A tell_story() recipe you can run again and again.",
+      "concepts": [
+        "functions"
+      ],
+      "steps": [
+        {
+          "id": "two-stories",
+          "type": "fill",
+          "introduces": [
+            "functions"
+          ],
+          "instruction": "Your lists are now inside a **function** called `tell_story()`. The last line calls it once. Fill the blank to tell a **second** story.",
+          "code": "step-6-fill.py",
+          "check": {
+            "kind": "python",
+            "file": "check-two-stories.py",
+            "description": "Two stories from one recipe!"
+          },
+          "hints": [
+            "The blank is on the very last line.",
+            "`def tell_story():` makes the recipe. Writing its name with brackets runs it.",
+            "`cheer()` written twice runs the cheer recipe twice.",
+            "`tell_______()`",
+            "Replace `___` with `tell_story()`. Then try calling it 5 times!"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "read-aloud",
+      "title": "Read it aloud",
+      "goal": "The machine tells the story out loud.",
+      "concepts": [
+        "functions"
+      ],
+      "steps": [
+        {
+          "id": "speak",
+          "type": "fill",
+          "instruction": "Now the story is built into one variable, `story`, and drawn on the stage. Fill the blank with the stage command that **reads words out loud**. (Turn your sound on!)",
+          "code": "step-7-fill.py",
+          "check": {
+            "kind": "python",
+            "file": "check-speak.py",
+            "description": "Your machine can talk!"
+          },
+          "hints": [
+            "The blank is in `stage.___(story)`, the last line inside the function.",
+            "The stage has a command that uses the computer's voice. It's a word for talking.",
+            "`stage.text(...)` writes words. Another command *says* them.",
+            "`stage.sp___(story)`",
+            "`stage.speak(story)`. Turn your sound up and Run!"
+          ]
+        },
+        {
+          "id": "family-hero",
+          "type": "make-it-yours",
+          "instruction": "Make a story about your family: add someone from home to your `heroes` list (like `\"Chintu bhaiya\"`), then Run until the machine picks them.",
+          "check": {
+            "kind": "python",
+            "file": "check-family.py",
+            "description": "Now that's a story to share!"
+          },
+          "hints": [
+            "Find the `heroes = [...]` line near the top.",
+            "Add a comma after the last hero, then the new name in quotes.",
+            "`[\"a sleepy lion\", \"Captain Chai\", \"Mausi\"]` has 3 heroes.",
+            "`heroes = [..., \"______\"]`",
+            "Add `, \"Chintu bhaiya\"` before the closing `]` of the heroes list, then Run a few times."
+          ]
+        }
+      ]
+    }
+  ]
+}
