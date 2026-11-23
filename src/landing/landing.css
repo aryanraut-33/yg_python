@@ -13,8 +13,8 @@
 .hero {
   position: relative;
   z-index: 1;
-  height: calc(100vh - 2 * var(--bezel) - 67px);
-  height: calc(100svh - 2 * var(--bezel) - 67px);
+  height: calc(100vh - 2 * var(--bezel));
+  height: calc(100svh - 2 * var(--bezel));
   min-height: 600px;
   overflow: hidden;
   border-bottom: 1px solid var(--line-strong);
@@ -138,6 +138,7 @@
 .dot span {
   width: 8px;
   height: 8px;
+  border-radius: 2px;
   background: var(--text);
   opacity: 0.28;
   transition: width 0.2s ease, opacity 0.2s ease;
@@ -169,7 +170,7 @@
 
 .sh {
   margin-bottom: 44px;
-  scroll-margin-top: 32px;
+  scroll-margin-top: 88px;
 }
 .sh-row {
   display: flex;
@@ -258,9 +259,13 @@
 .step {
   display: flex;
   flex-direction: column;
-  min-height: 540px;
+  min-height: 440px;
   padding: 30px 28px 0;
   overflow: hidden;
+  transition: transform 0.18s ease, background-color 0.18s ease;
+}
+.step:hover {
+  background-color: color-mix(in srgb, var(--surface) 35%, transparent);
 }
 .step + .step {
   border-left: 1px solid var(--line-strong);
@@ -301,6 +306,7 @@
   margin-left: 6px;
   padding: 2px 6px;
   border: 1px solid var(--line-strong);
+  border-radius: var(--radius-xs);
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 400;
@@ -383,6 +389,8 @@
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
 .term {
   display: flex;
@@ -837,6 +845,7 @@
   width: 10px;
   height: 36px;
   border: 1px solid var(--line-strong);
+  border-radius: var(--radius-xs);
 }
 .scroll-led {
   position: absolute;
@@ -844,6 +853,7 @@
   top: 1px;
   width: 6px;
   height: 6px;
+  border-radius: 2px;
   background: var(--accent);
   box-shadow: 0 0 8px var(--accent);
   animation: scroll-led 1.6s steps(4, end) infinite;
@@ -860,6 +870,7 @@
   bottom: 16px;
   width: 30px;
   height: 30px;
+  border-radius: var(--radius-xs);
 }
 @media (prefers-reduced-motion: reduce) {
   .scroll-led {
@@ -995,4 +1006,11 @@
     transform: none;
     opacity: 1;
   }
+}
+
+.parents-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 32px;
+  margin-top: 28px;
 }

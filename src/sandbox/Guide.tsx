@@ -1,4 +1,5 @@
-import type { LoadedProject } from '../content/types';
+import { CONCEPT_NAMES, type LoadedProject } from '../content/types';
+import { STARTER_ID, liveProjects } from '../content/projects';
 import type { RunnerStatus } from '../runtime/PythonRunner';
 import { RichText } from '../ui/RichText';
 import { onboardingCompleted } from '../onboarding/progress';
@@ -18,14 +19,6 @@ const STEP_TYPE_LABEL: Record<string, string> = {
   fix: 'Fix it',
   'make-it-yours': 'Make it yours',
   recall: 'Quick question',
-};
-const CONCEPT_NAMES: Record<string, string> = {
-  'function-calls': 'Commands',
-  coordinates: 'x and y',
-  variables: 'Variables',
-  strings: 'Text (strings)',
-  'for-loops': 'For loops',
-  range: 'range()',
 };
 
 interface Props {
@@ -47,6 +40,7 @@ interface Props {
   onRun(): void;
   onHome(): void;
   onShowIntro(id: string): void;
+  onShare?(): void;
 }
 
 export function Guide(p: Props) {
@@ -177,10 +171,10 @@ function Intro(p: Props) {
   return (
     <aside className="panel guide" aria-label="About this project">
       <div className="guide-scroll">
-        <p className="guide-eyebrow">Your first project</p>
+        <p className="guide-eyebrow">{m.id === STARTER_ID ? 'Your first project' : `Level ${m.level} project`}</p>
         <h1 className="guide-title guide-title-big">{m.title}</h1>
         <p className="guide-lead">
-          In about 10 minutes, you'll write real Python that makes <strong>your name</strong> flash in lights.
+          <RichText text={m.words?.intro ?? m.pitch} />
         </p>
         <p className="guide-goal">The stage on the right shows what you'll build.</p>
         <ol className="intro-list">
@@ -220,7 +214,7 @@ function Finished(p: Props) {
         </div>
         <p className="guide-eyebrow">Project finished</p>
         <h1 className="guide-title guide-title-big">You built {m.title}!</h1>
-        <p className="guide-lead">Every line of that light show is your own Python.</p>
+        <p className="guide-lead">{m.words?.finished ?? 'Every line of it is your own Python.'}</p>
         <p className="guide-goal">Python ideas you used:</p>
         <ul className="concept-chips">
           {m.concepts.map((c) => (
@@ -228,14 +222,15 @@ function Finished(p: Props) {
           ))}
         </ul>
         <button className="btn btn-primary btn-block" onClick={p.onRun} disabled={p.status !== 'ready'}>
-          Watch my light show
+          {m.words?.replay ?? 'Run my program'}
         </button>
-        <p className="guide-small">
-          Keep tinkering: change anything in the code and press Run. Try a different name, colour or speed.
-        </p>
-        <div className="finish-next">
-          <p className="guide-goal">Next projects are on their way: Mars Rover Rescue, Planet Maker, Secret Code Machine…</p>
-        </div>
+        {p.onShare && (
+          <button className="btn btn-ghost btn-block btn-share" onClick={p.onShare} style={{ marginTop: 8 }}>
+            Share with family →
+          </button>
+        )}
+        <p className="guide-small">{m.words?.tinker ?? 'Keep tinkering: change anything in the code and press Run.'}</p>
+        <NextProject currentId={m.id} />
         <div className="finish-actions">
           <button className="link-btn" onClick={p.onHome}>
             Back to the home page
@@ -246,5 +241,25 @@ function Finished(p: Props) {
         </div>
       </div>
     </aside>
+  );
+}
+
+function NextProject({ currentId }: { currentId: string }) {
+  const live = liveProjects();
+  const i = live.findIndex((p) => p.manifest.id === currentId);
+  const next = live[(i + 1) % live.length];
+  if (!next || next.manifest.id === currentId) return null;
+  return (
+    <div className="finish-next">
+      <p className="guide-eyebrow">Up next</p>
+      <a className="next-card" href={`/play/${next.manifest.id}`} onClick={linkClick}>
+        <span className="next-card-title">{next.manifest.title}</span>
+        <span className="next-card-pitch">{next.manifest.pitch}</span>
+        <span aria-hidden="true" className="next-card-arrow">→</span>
+      </a>
+      <a className="guide-link" href="/projects" onClick={linkClick}>
+        See all projects
+      </a>
+    </div>
   );
 }

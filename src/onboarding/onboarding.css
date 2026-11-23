@@ -61,13 +61,13 @@
   content: '';
   width: 16px;
   height: 2px;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   background: var(--track);
 }
 .cm-dot {
   width: 10px;
   height: 10px;
-  border-radius: 0;
+  border-radius: 50%;
   background: var(--track);
 }
 .chapter-map li.done .cm-dot {
@@ -122,7 +122,7 @@
   flex-direction: column;
   min-height: calc(100vh - 100px - 2 * var(--bezel));
   padding: 22px 22px 0;
-  border-radius: 0;
+  border-radius: var(--radius-lg);
   background: var(--surface);
   border: 1px solid var(--line);
   overflow: hidden;
@@ -156,7 +156,7 @@
 .bubble {
   max-width: 92%;
   padding: 12px 16px;
-  border-radius: 0;
+  border-radius: var(--radius-md);
   background: var(--tint);
   font-size: 16.5px;
   line-height: 1.5;
@@ -168,11 +168,11 @@
 }
 .bubble-nix {
   align-self: flex-start;
-  border-bottom-left-radius: 0;
+  border-bottom-left-radius: var(--radius-xs);
 }
 .bubble-riff {
   align-self: flex-end;
-  border-bottom-right-radius: 0;
+  border-bottom-right-radius: var(--radius-xs);
   background: var(--notice-bg);
 }
 .bubble-name {
@@ -195,7 +195,7 @@
   font-family: var(--font-mono);
   font-size: 0.9em;
   padding: 1px 5px;
-  border-radius: 0;
+  border-radius: var(--radius-xs);
   background: var(--editor-bg);
   color: var(--syn-function);
 }
@@ -274,7 +274,7 @@
 
 .ob-card {
   padding: 22px;
-  border-radius: 0;
+  border-radius: var(--radius-md);
   background: var(--surface);
   border: 1px solid var(--line);
 }
@@ -311,7 +311,7 @@
 .ob-code {
   margin: 0 0 12px;
   padding: 14px 16px;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: var(--editor-bg);
   color: var(--syn-text);
   font-family: var(--font-mono);
@@ -323,7 +323,7 @@
 .ob-output {
   margin: 0 0 12px;
   padding: 10px 14px;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: #0b1714;
   color: #7be0c3;
   font-family: var(--font-mono);
@@ -333,7 +333,7 @@
   display: inline-block;
   margin: 4px 0 0;
   padding: 4px 10px;
-  border-radius: 0;
+  border-radius: var(--radius-xs);
   background: var(--editor-bg);
   color: var(--syn-function);
   font-family: var(--font-mono);
@@ -349,7 +349,7 @@
   min-height: 220px;
   padding: 32px;
   border: 1.5px dashed var(--line);
-  border-radius: 0;
+  border-radius: var(--radius-md);
   color: var(--text-soft);
   text-align: center;
 }
@@ -389,7 +389,7 @@
   gap: 3px;
   padding: 16px 18px;
   border: 1.5px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: var(--surface);
   text-align: left;
   cursor: pointer;
@@ -414,8 +414,8 @@
   flex: 1;
   min-width: 0;
   padding: 12px 14px;
+  border-radius: var(--radius-sm);
   border: 1.5px solid var(--line);
-  border-radius: 0;
   background: var(--editor-bg);
   font-size: 17px;
 }
@@ -433,7 +433,7 @@
 .sw-card {
   padding: 12px 14px;
   border: 1.5px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: var(--tint);
   text-align: left;
   cursor: pointer;
@@ -460,7 +460,7 @@
   display: block;
   width: 100%;
   padding: 10px 12px;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   text-align: left;
 }
 .sw-slot {
@@ -475,7 +475,7 @@
 .sw-log {
   margin-top: 14px;
   padding: 12px 14px;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: var(--editor-bg);
   font-family: var(--font-mono);
   font-size: 13.5px;
@@ -507,7 +507,7 @@
   min-height: 116px;
   padding: 18px 14px;
   border: 1.5px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: var(--tint);
   cursor: pointer;
 }
@@ -543,7 +543,7 @@
   place-items: center;
   height: 120px;
   margin-bottom: 14px;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: var(--tint);
 }
 .uses-nav {
@@ -554,7 +554,7 @@
   width: 8px;
   height: 8px;
   margin: 0 3px;
-  border-radius: 0;
+  border-radius: 50%;
   background: var(--track);
 }
 .uses-dots .seen {
@@ -579,7 +579,7 @@
   min-height: 56px;
   padding: 12px 14px;
   border: 1.5px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: var(--surface);
   text-align: left;
   cursor: pointer;
@@ -617,7 +617,7 @@
   gap: 4px;
   padding: 14px 16px;
   border: 1.5px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: var(--surface);
   text-align: left;
   cursor: pointer;
@@ -645,7 +645,7 @@
 .lesson-steps li {
   flex: 1;
   padding: 6px 8px;
-  border-radius: 0;
+  border-radius: var(--radius-xs);
   background: var(--tint);
   color: var(--text-soft);
   font-size: 12.5px;
@@ -668,7 +668,7 @@
   padding: 0;
   border: none;
   border-bottom: 2px solid var(--accent);
-  border-radius: 0;
+  border-radius: var(--radius-xs);
   background: var(--notice-bg);
   color: inherit;
   font: inherit;
@@ -693,7 +693,7 @@
   min-height: 70px;
   margin-bottom: 4px;
   padding: 12px 14px;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: var(--tint);
 }
 .part-explain p {
@@ -711,19 +711,19 @@
   height: 170px;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: var(--editor-bg);
 }
 .mini-ws .console-panel {
   min-height: 120px;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
 }
 .mini-ws .console-scroll {
   max-height: 200px;
 }
 .challenge-task {
   padding: 12px 14px;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: var(--notice-bg);
   font-size: 16px;
   line-height: 1.5;
@@ -733,7 +733,7 @@
 .finale-project {
   margin: 16px 0 6px;
   padding: 16px;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: var(--tint);
 }
 
@@ -755,7 +755,7 @@
   justify-content: center;
   gap: 16px;
   padding: 8px 14px;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   align-self: center;
 }
 .tour-grid {
@@ -779,7 +779,7 @@
 
 .tour .tz {
   transition: opacity 0.25s ease;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
 }
 .tour:not(.tour-finished) .tz:not(.tz-on):not(:has(.tz-on)) {
   opacity: 0.32;
@@ -814,8 +814,8 @@
   flex: 1;
   padding: 14px 18px;
   border: 2px solid var(--accent);
-  border-radius: 0;
-  border-bottom-left-radius: 0;
+  border-radius: var(--radius-md);
+  border-bottom-left-radius: var(--radius-xs);
   background: var(--surface);
   font-size: 16.5px;
   line-height: 1.5;
@@ -921,7 +921,7 @@
 .qc-bar {
   flex: 0 0 140px;
   height: 6px;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   background: var(--track);
   overflow: hidden;
 }
@@ -971,7 +971,7 @@
 }
 .recap-tag {
   padding: 2px 10px;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   background: var(--notice-bg);
   color: var(--accent);
   font-size: 12px;
@@ -994,7 +994,7 @@
 .recap-card .console-panel {
   margin-top: 10px;
   min-height: 0;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
 }
 .recap-card .console-scroll {
   max-height: 160px;

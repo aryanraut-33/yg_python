@@ -12,7 +12,7 @@ export interface Slide {
 /** Slide 0 is about the platform itself; the rest show projects kids build. */
 export const INTRO: Slide = {
   key: 'intro',
-  name: 'yg python',
+  name: 'Tinkora',
   category: 'Real Python for kids aged 9–15',
   headline: 'Learn Python by\nbuilding things you love.',
   sub: 'Games, art, robots, space missions. Kids learn real Python by making real projects, one step at a time.',
@@ -50,7 +50,7 @@ export const PROJECT_SLIDES: Slide[] = [
     category: 'Robots',
     headline: 'Drive a rover\nacross Mars.',
     sub: 'Write the commands, steer around the craters and bring the rover home before its battery runs out.',
-    href: null,
+    href: '/play/mars-rover-rescue',
   },
   {
     key: 'drone',

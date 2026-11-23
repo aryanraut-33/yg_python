@@ -50,7 +50,7 @@ export const CATALOGUE: CatalogueProject[] = [
     "hook": "\"Mission Dadi\", a launch named after a family member.",
     "needs": "",
     "id": "rocket-launch",
-    "href": null,
+    "href": "/play/rocket-launch",
     "featured": false,
     "phoneFriendly": true
   },
@@ -76,7 +76,7 @@ export const CATALOGUE: CatalogueProject[] = [
     "hook": "a gallery card and a downloadable poster.",
     "needs": "",
     "id": "spiral-art",
-    "href": null,
+    "href": "/play/spiral-art",
     "featured": false,
     "phoneFriendly": true
   },
@@ -102,7 +102,7 @@ export const CATALOGUE: CatalogueProject[] = [
     "hook": "the family plays it from the share link, and the best score wins.",
     "needs": "",
     "id": "guess-my-number",
-    "href": null,
+    "href": "/play/guess-my-number",
     "featured": false,
     "phoneFriendly": true
   },
@@ -128,7 +128,7 @@ export const CATALOGUE: CatalogueProject[] = [
     "hook": "a new story every time a family member opens the link.",
     "needs": "",
     "id": "story-machine",
-    "href": null,
+    "href": "/play/story-machine",
     "featured": false,
     "phoneFriendly": true
   },
@@ -154,7 +154,7 @@ export const CATALOGUE: CatalogueProject[] = [
     "hook": "parents see the plan (a nice moment for the parent dashboard).",
     "needs": "",
     "id": "pocket-money-tracker",
-    "href": null,
+    "href": "/play/pocket-money-tracker",
     "featured": false,
     "phoneFriendly": true
   },
@@ -180,7 +180,7 @@ export const CATALOGUE: CatalogueProject[] = [
     "hook": "a replay of the mission on the share page.",
     "needs": "robot simulator. This is the first use, and it proves the simulator works.",
     "id": "mars-rover-rescue",
-    "href": null,
+    "href": "/play/mars-rover-rescue",
     "featured": true,
     "phoneFriendly": true
   },

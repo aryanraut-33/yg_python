@@ -45,7 +45,7 @@ export const SCREENS: Screen[] = [
     kind: 'talk',
     lines: [
       { who: 'riff', pose: 'welcome', text: 'Heyyy! You made it!' },
-      { who: 'nix', pose: 'welcome', text: 'Welcome to yg python. I\'m **Nix**.' },
+      { who: 'nix', pose: 'welcome', text: "Welcome to Tinkora. I'm **Nix**." },
       { who: 'riff', pose: 'celebrating', text: 'And I\'m **Riff**! We\'re going to learn Python together, and then build cool stuff with it.' },
       { who: 'nix', pose: 'thinking', text: 'I\'m the one with all the questions. Figuring out how things work is my favourite thing.' },
       { who: 'riff', pose: 'encouraging', text: 'And I cheer the loudest. Especially when something goes wrong. That\'s when it gets fun!' },

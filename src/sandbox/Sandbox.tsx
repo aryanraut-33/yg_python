@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CodeEditor } from '../editor/CodeEditor';
 import { translateError } from '../errors/translate';
-import { loadProjects } from '../content/projects';
+import { STARTER_ID, loadProjects } from '../content/projects';
+import { accountsEnabled } from '../account/supabase';
+import { recordConcepts, useActiveChild } from '../account/family';
+import { ParentGate } from '../account/ParentGate';
 import type { LoadedProject, Milestone, Step } from '../content/types';
 import { getRunner, useRunnerEvents, useRunnerStatus } from '../runtime/runnerHub';
 import type { CheckSpec } from '../runtime/protocol';
@@ -11,9 +14,10 @@ import { ThemeToggle } from '../ui/ThemeToggle';
 import { PlayIcon, StopIcon } from '../ui/icons';
 import { linkClick, navigate } from '../router';
 import { logEvent } from '../telemetry/sessionLog';
-import { clearProgress, emptyProgress, loadProgress, saveProgress, type Progress } from './progress';
+import { clearProgress, emptyProgress, loadProgress, progressKey, saveProgress, type Progress } from './progress';
 import { Guide, type StepFeedback } from './Guide';
 import { ConceptPopout, GLOSSARY } from './ConceptPopout';
+import { PublishModal } from '../sharing/PublishModal';
 import './sandbox.css';
 
 const MAX_CONSOLE_CHARS = 40_000;
@@ -33,8 +37,17 @@ function flatten(project: LoadedProject): FlatStep[] {
   return out;
 }
 
-function fillTemplate(src: string, remembered: Record<string, string>) {
-  return src.replace(/\{\{(\w+)\}\}/g, (_, k: string) => (remembered[k] ?? (k === 'name' ? 'AARAV' : '')).replace(/["\\]/g, ''));
+/**
+ * Fills `{{key}}` or `{{key|default}}` in step code with values remembered by earlier checks.
+ * Plain values go inside quotes in the code, so quotes and backslashes are removed.
+ * Keys ending in `_py` hold a Python literal written by our own check (e.g. the child's
+ * list of heroes) and are inserted as they are.
+ */
+export function fillTemplate(src: string, remembered: Record<string, string>) {
+  return src.replace(/\{\{(\w+)(?:\|([^}]*))?\}\}/g, (_, k: string, fallback?: string) => {
+    const value = remembered[k] ?? fallback ?? (k === 'name' ? 'AARAV' : '');
+    return k.endsWith('_py') ? value : value.replace(/["\\]/g, '');
+  });
 }
 
 function checkSpecFor(project: LoadedProject, step: Step): CheckSpec | null {
@@ -45,6 +58,7 @@ function checkSpecFor(project: LoadedProject, step: Step): CheckSpec | null {
 
 export function Sandbox({ projectId }: { projectId: string }) {
   const project = useMemo(() => loadProjects().find((p) => p.manifest.id === projectId && !p.manifest.draft), [projectId]);
+  const child = useActiveChild();
   if (!project) {
     return (
       <div className="sandbox-missing">
@@ -55,7 +69,14 @@ export function Sandbox({ projectId }: { projectId: string }) {
       </div>
     );
   }
-  return <SandboxInner project={project} />;
+  // Guests get the starter project; a grown-up sets up the family to open the rest.
+  // Enrolled children require their own active subscription pass for projects beyond the starter.
+  if (accountsEnabled && project.manifest.id !== STARTER_ID) {
+    if (!child) return <ParentGate title={project.manifest.title} />;
+    if (child.subscriptionStatus !== 'active') return <ParentGate title={project.manifest.title} childName={child.firstName} />;
+  }
+  // Remount when the child changes, so the right child's progress loads.
+  return <SandboxInner key={child?.id ?? 'guest'} project={project} />;
 }
 
 function SandboxInner({ project }: { project: LoadedProject }) {
@@ -75,6 +96,16 @@ function SandboxInner({ project }: { project: LoadedProject }) {
   const previewRun = useRef(false);
   const stepStartedAt = useRef(Date.now());
   const runCount = useRef(0);
+  const activeChild = useActiveChild();
+  const [sharing, setSharing] = useState(false);
+
+  const handleShare = () => {
+    if (!activeChild) {
+      navigate('/family');
+      return;
+    }
+    setSharing(true);
+  };
 
   const finished = progress.stepIndex >= steps.length;
   const current = progress.stepIndex >= 0 && !finished ? steps[progress.stepIndex] : null;
@@ -87,7 +118,7 @@ function SandboxInner({ project }: { project: LoadedProject }) {
   // reload so this tab never overwrites it with stale state.
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
-      if (e.key === `yg-progress-${id}` || e.key === null) window.location.reload();
+      if (e.key === progressKey(id) || e.key === null) window.location.reload();
     };
     window.addEventListener('storage', onStorage);
     return () => window.removeEventListener('storage', onStorage);
@@ -252,6 +283,7 @@ function SandboxInner({ project }: { project: LoadedProject }) {
     if (step?.type === 'predict' && progress.predictions[step.id] === undefined) return;
     clearOutput();
     runCount.current += 1;
+    renderer.speech = true;
     setHasRunThisStep(true);
     logEvent('run', { step: step?.id ?? (finished ? 'free' : 'intro'), n: runCount.current });
     getRunner().run(code, step ? checkSpecFor(project, step) : null);
@@ -264,7 +296,9 @@ function SandboxInner({ project }: { project: LoadedProject }) {
     if (busy) return;
     clearOutput();
     previewRun.current = true;
-    const solution = fillTemplate(project.files[project.manifest.files.solution] ?? '', progress.remembered);
+    renderer.speech = false; // the intro demo plays silently; the child's own runs can talk
+    const files = project.manifest.files;
+    const solution = fillTemplate(project.files[files.preview ?? files.solution] ?? '', progress.remembered);
     getRunner().run(solution, null);
   }, [busy, clearOutput, progress.remembered, project]);
 
@@ -302,7 +336,8 @@ function SandboxInner({ project }: { project: LoadedProject }) {
     enterStep(i, progress);
     if (i >= steps.length && !finished) {
       logEvent('project_complete', { project: id });
-      // Celebrate by playing the child's own light show.
+      void recordConcepts(id, project.manifest.concepts);
+      // Celebrate by running the child's own finished program.
       const last = steps[steps.length - 1].step.id;
       const finalCode = progress.freeCode ?? progress.code[last] ?? progress.startCode[last] ?? '';
       setTimeout(() => getRunner().run(finalCode, null), 300);
@@ -319,7 +354,7 @@ function SandboxInner({ project }: { project: LoadedProject }) {
   };
 
   const startOver = () => {
-    if (!window.confirm('Start Name Light Show again from the beginning? Your code for this project will be cleared.')) return;
+    if (!window.confirm(`Start ${project.manifest.title} again from the beginning? Your code for this project will be cleared.`)) return;
     if (busy) getRunner().stop();
     clearProgress(id);
     const fresh = emptyProgress();
@@ -356,13 +391,19 @@ function SandboxInner({ project }: { project: LoadedProject }) {
     <div className="sandbox">
       <header className="sb-topbar">
         <a className="wordmark" href="/" onClick={linkClick}>
-          yg python
+          Tinkora
         </a>
         <div className="sb-title">
           <span className="sb-project">{project.manifest.title}</span>
           <StepTrack steps={steps} progress={progress} onPick={goTo} />
         </div>
-        <ThemeToggle />
+        <div className="sb-top-right">
+          <button className="sb-share-pill" onClick={handleShare} title="Share project with family">
+            Share with family →
+          </button>
+          <ChildChip />
+          <ThemeToggle />
+        </div>
       </header>
 
       <main className="sb-grid">
@@ -385,6 +426,7 @@ function SandboxInner({ project }: { project: LoadedProject }) {
           onRun={run}
           onHome={() => navigate('/')}
           onShowIntro={setIntro}
+          onShare={handleShare}
         />
 
         <section className="panel sb-editor" aria-label="Code">
@@ -423,6 +465,12 @@ function SandboxInner({ project }: { project: LoadedProject }) {
           <div className="panel stage-panel" aria-label="Stage">
             <canvas ref={canvasRef} className="stage-canvas" role="img" aria-label="Stage: what your program draws" />
             {progress.stepIndex === -1 && <span className="stage-badge">What you'll build</span>}
+            {/* Art projects make pictures worth keeping as posters. */}
+            {progress.stepIndex !== -1 && project.manifest.category === 'art' && (
+              <button className="stage-save" onClick={() => renderer.download(`${id}.png`)} title="Save the stage as a picture">
+                Save picture
+              </button>
+            )}
           </div>
           <Console
             lines={lines}
@@ -436,6 +484,16 @@ function SandboxInner({ project }: { project: LoadedProject }) {
         </section>
       </main>
       {intro && <ConceptPopout id={intro} onClose={closeIntro} />}
+      {sharing && activeChild && (
+        <PublishModal
+          childId={activeChild.id}
+          childName={activeChild.firstName}
+          projectId={id}
+          projectTitle={project.manifest.title}
+          currentCode={code}
+          onClose={() => setSharing(false)}
+        />
+      )}
     </div>
   );
 }
@@ -465,5 +523,17 @@ function StepTrack({ steps, progress, onPick }: { steps: FlatStep[]; progress: P
       </ol>
       <span className="track-label">{label}</span>
     </div>
+  );
+}
+
+/** Whose workspace this is, with a way back to their projects. */
+function ChildChip() {
+  const child = useActiveChild();
+  if (!child) return null;
+  return (
+    <a className="sb-child" href="/home" onClick={linkClick} title="Back to my projects">
+      <span className="led on" aria-hidden="true" />
+      {child.firstName}
+    </a>
   );
 }

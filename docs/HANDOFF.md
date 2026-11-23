@@ -1,7 +1,25 @@
-# yg python: Handoff for the Next Agent
+# Tinkora (formerly yg python): Handoff for the Next Agent
 
-**Last updated:** 2026-11-20
-**Status:** strategy, build plan, visual direction and landing hero are decided. **No application code has been written yet.** The next step is **Phase 0 (Foundations)**, which starts only once the user says go.
+**Last updated:** 2026-11-22
+**Status (2026-11-22):**
+- Phases 0, 1, and 2 are complete. The platform is christened **Tinkora**.
+- **Phase 3 is in progress:**
+  - **Step 1 (Database schema):** `supabase/migrations/0003_show_it_off_sharing.sql` written with `published_projects`, `invites`, `reactions` tables, strict RLS, and secure `get_shared_studio` / `post_reaction` RPCs for visitor access.
+  - **Step 2 (Publish flow & child safety):** Built `src/sharing/safety.ts` (scans for phones, emails, PIN codes, and schools), `src/sharing/publish.ts`, and `src/sharing/PublishModal.tsx` wired into the workspace top bar and finish screen. Tested in `src/sharing/safety.test.ts`. Local development URLs sanitized to prevent SSL protocol errors on localhost.
+  - **Step 3 (The Recipient Studio Page):** Built `src/sharing/StudioPage.tsx` routed at `/s/:token`. Features personal greeting for the recipient, multi-project tab switching, browser Pyodide canvas player with Run/Stop, preset compliment reaction buttons with live count updates, code peek inspector, and automatic `noindex` robots meta tag. Responsive hero layout for laptops with quick Tinkora introduction modal.
+  - **Step 4A (Weekend Showcase & WhatsApp Share Generator):** Built `src/sharing/FridayShowcase.tsx` + `showcase.css`. Accessible during weekends (Friday/Saturday/Sunday) via the illuminated `✦ SHOWCASE ✦` button in the top navbar outside the navigation links. Generates ready-made WhatsApp share messages with one-tap copy/share.
+  - **Step 4B (Family Appreciation Badges):** Built `src/sharing/badges.ts` + `AppreciationBadgesModal.tsx` + `badges.css` implementing social reward milestones for distinct family members cheering creations: **First Fans** (3 people), **Crowd Pleaser** (10 people), **Family Famous** (25 people). Clickable badge pill sits alongside the child's name in the top navbar and opens the "Appreciation badges" popup modal. Tested in `badges.test.ts`.
+  - **Step 4C (Mobile Touch Controls & Input Prompt on Stage):** Built `src/stage/TouchControls.tsx` + `touch.css` providing an on-screen D-Pad and Action buttons for touchscreens/smartphones. Added interactive `waiting-for-input` response bar in `StudioPage.tsx` for visitor text input.
+  - **Step 4D (Child Navigation, Progress, & Learn Lessons):**
+    - Updated Child navbar in `SiteNav.tsx` with: `Projects` (`/projects`), `Progress` (`/progress`), `Learn lessons` (`/learn`), and child's name highlighted in butter/yellow (`var(--accent)`) with badge button. Restricted child studio navbar to child pages (`/home`, `/progress`, `/learn`); marketing navbar stays on `/` and general pages.
+    - Added child name dropdown menu with options: **Family page**, **Open dashboard**, and **Log out**.
+    - Built Parental Verification Gate (`src/account/ParentGateModal.tsx`): protects sensitive family settings and logout from accidental child tampering via dynamic adult math verification, while children retain full freedom on the home page and coding workspace.
+    - Built `src/account/ProgressPage.tsx`: Interactive progress page filtering by *From Beginning*, *Last Month*, *Last Week*, displaying projects built, concepts mastered, and personalized stats.
+    - Built `src/learn/LearnLessons.tsx`: Core Python curriculum lessons with strict pedagogical rule: technical definition in simple child-friendly language first, followed by intuitive analogy/example, mascot tips (Nix/Riff), and live runnable Pyodide runner.
+    - Revamped `/home` (`src/account/ChildHome.tsx` + `child-home.css` + `WorkshopCore3D.tsx`): removed "Next up" card; added interactive Three.js 3D Python Stage Core (tangible rotating crystalline polyhedron with glowing mint wireframe lattice and code spark particles, interactive drag-to-spin and click pulse), Mascot Companion Lounge (Nix & Riff with clickable rotating tips and poses), 3 shadcn metric cards with clean SVG icons, Daily Code Spark riddle with instant verification, and filterable project catalogue tabs (All, In Progress, Built, Starters). Audited with `frontend-design`, `ui-ux-pro-max`, and `web-design-guidelines`.
+    - Fixed close buttons and modal backdrops on Showcase and Appreciation modals (`pointer-events: auto;` and `stopPropagation`).
+  - **Next:** Option D (Level 2 Maker projects from the 26-project catalogue) pending user instructions.
+- The history is in §12.
 
 This document records every decision made so far and explains why. Read it fully before you change anything. When this doc conflicts with an older source, this doc wins. Within this doc, later decisions override earlier ones; where that has happened, it is marked.
 
@@ -499,6 +517,7 @@ The user rejected the rounded-card look as generic "AI slop", and `DESIGN_RULES.
   - The slide controls are replaced by a small **scroll indicator**: an LED square stepping down a track, which fades out once you scroll.
   - A tiny square **pause button** stays in the corner, because WCAG 2.2.2 requires a way to pause auto-rotation.
 - **Sticky site nav** (`ui/SiteNav.tsx`) on the home and catalogue pages. "Projects" jumps to the home page's projects section.
+- **Floating nav (user, 2026-11-20):** the user rejected the full-width bar. The nav takes no height. On the left is the wordmark, bare on the hero and on a plate once scrolled. On the home hero the three-link panel is centred and the square theme switch sits at the right end. Once the hero scrolls away, the panel slides right and the switch glides smoothly behind it to the panel's left. Both use the same 0.6 s easing. The user replaced an earlier playful hop with this smooth glide. The catalogue always uses the right-aligned layout. There is no Start button in the nav. Instead, `ui/FloatingCta.tsx` pins "Start building" to the bottom-right corner once the hero (or `.cat-head` on /projects) has scrolled away, and hides it when the closing "Ready to make something?" section (`.cta`, or `.cat-foot`) comes into view.
 - **Home projects section** shows 8 featured projects as a departure board (every row links to that project's catalogue entry; the live one starts the project) plus an **"All projects catalogue"** button.
 - **`/projects` catalogue** (`catalogue/Catalogue.tsx`) lists all 26 projects:
   - The data is generated from `docs/project-catalogue.md` by `python3 scripts/build-catalogue.py` into `src/catalogue/data.ts`. **Edit the markdown, then rerun the script.**
@@ -520,3 +539,104 @@ The user rejected the rounded-card look as generic "AI slop", and `DESIGN_RULES.
   - Laptop or Chromebook is marked **Recommended**, with Riff's coding pose.
   - Phone or tablet is marked **Also works**, with Nix's new `mobile` pose (`public/mascots/nix/mobile.webp`, from `assets/mascot/nix/14_nix_mobile.png`).
   - "How it works" step 2 now uses Riff's pointing pose, so the coding pose isn't shown twice.
+
+### Phase 2, part 1 (2026-11-20): all seven Level 1 projects
+
+**Scope decisions (user, 2026-11-20):**
+- Phase 2 now includes **every Level 1 project**, not just the three in the build plan.
+- **Build order:** the projects first. After them come accounts, Home and Explore, the weekly parent email and the data controls.
+- **Backend:** the user creates the Supabase project (Mumbai region) and the Brevo account, and pastes in the project URL and the anon key. **Never** put the `service_role` key in chat or in the repo.
+- **Sign-up:** guests get the onboarding plus Name Light Show. Opening a second project asks for a parent, and guest progress carries over. This gate is *not built yet*: for now, every live project opens without an account.
+- **Child profile name (user, changed 2026-11-20):** the parent enrols the child's **first name**, because it feels more personal than a generated username. This replaced the earlier plan of adjective + animal + number (BrightFox27). Collect the first name only, with no surname, and only with parental consent.
+- **Gate:** the Phase 1 sessions with kids still haven't run. The user chose to go ahead anyway.
+
+**Live projects**, in catalogue order. Each has 4 milestones and 8 or 9 steps, with 5 hints per step.
+- Name Light Show
+- Rocket Launch
+- Spiral Art
+- Guess My Number
+- Story Machine
+- Pocket Money Tracker
+- Mars Rover Rescue
+
+`LIVE` in `scripts/build-catalogue.py` lists them. The home board and the catalogue's "Build it now" link straight to them; only Name Light Show goes through the onboarding first.
+
+**New platform pieces** (all in `src/runtime/python/`, copied into Pyodide by `py.worker.ts`):
+
+| Piece | What it is |
+|---|---|
+| `turtle.py` | A lookalike of Python's turtle that draws on the stage, because the real one needs a desktop window. It covers the common commands and a `Turtle()` class, and shows a turtle cursor as an overlay. Speed 1–10 maps to pixels per second; speed 0 draws instantly. |
+| `rover.py` | The **robot simulator** v1: an 11 × 6 Mars grid with 5 missions. Commands are `mission(n)`, `forward(n)`, `turn("left"/"right")`, `battery()` and `scan()`. Each square costs 3% battery and each turn costs 1%. Hitting a crater raises `RoverStuck`, the edge of the map raises `RoverOffMap` and an empty battery raises `BatteryEmpty`; the error translator turns these into "The rover is stuck" and similar messages. |
+| `stage.py` additions | `sprite(name, x, y, size, angle)` draws 14 ready-made pictures (rocket, flame, smoke, star, planet, moon, cloud, heart, coin, rover, probe, base, crater, flag). `speak(words)` reads text aloud with the browser's own voice, so nothing leaves the device; intro previews stay silent. `bar_chart(values, labels, goal=, title=, highlight=)` draws a chart. There are more colour names, and a `_silent` mode for checks. |
+| Bootstrap | Calls `_reset()` on turtle and rover before every run. Checks get `simulate(answers, seed)`, which re-runs the child's program behind the scenes, typing the answers into each `input()`. A line budget catches endless loops. Checks also get `lines()`, `sprites()`, `rects()`, `spoken()` and `rover_state()`. |
+| Sandbox | Intro and finish text comes from each manifest's `words`. The finish screen has an **Up next** card that follows catalogue order. Art projects get a **Save picture** button, which downloads a PNG on the device. |
+
+**Content format additions** (see `content/README.md`):
+- `words` in the manifest.
+- `files.preview` for projects whose solution waits for typing. Guess My Number uses it.
+- Template values can have defaults: `{{goal|800}}`.
+- Keys ending in `_py` insert a Python literal that a check remembered, such as the child's own list. Story Machine uses this to carry the child's word lists into later steps.
+
+**Tests:** `npm run test:checks` checks every step, in all 7 projects:
+- the step's starting code must **fail** its check;
+- a correct answer must **pass**;
+- every solution and preview must run.
+
+`npm test` validates every manifest.
+
+### Phase 2, part 2 (2026-11-20): family accounts (code done; database setup by the user)
+
+- **Keys:** they live in `.env.local`, which is gitignored: `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`.
+  - Without them, the app runs guest-only and the gate is off.
+  - Never commit or request the secret or `service_role` key.
+  - **Supabase project settings the user chose:** Mumbai region; Data API on; "Grant API access to new tables automatically" off; "Enable RLS on new tables automatically" on.
+  - **Email:** Brevo SMTP is configured inside Supabase's Auth settings, not in this repo.
+- **Database:** `supabase/migrations/0001_family_accounts.sql`, run once in the SQL Editor.
+  - **Tables:**
+    - `parents` (id = the auth user);
+    - `consents`: append-only, recording the policy version and what was agreed;
+    - `children`: **first name** and birth year only;
+    - `progress`: one JSON row per child per project, plus `onboarding`;
+    - `events`;
+    - `concepts_learned`.
+  - **Security:** row-level security on every table, through `is_my_child()`. Visitors who aren't signed in get no access at all. Only the privileges the app needs are granted.
+  - **Erasure:** `delete_my_account()` deletes the auth user, and everything else cascades.
+- **Privacy test:** `supabase/tests/family_privacy_check.sql` creates two fake families inside a transaction and proves neither can read or write the other's rows, and that visitors who aren't signed in can't read anything. It then rolls back. This is the Phase 2 check "a family can never see another family's data".
+- **Client code:**
+  - `src/account/family.ts` handles the session, the active child, sync, data export and deletion.
+  - **The active child:** `localStorage` key `yg-active-child`.
+  - **Per-child local copies:** each child's progress is kept under `yg-c-<childId>-<baseKey>`. Guests keep the old keys, so nothing changes for them.
+  - **Sync:** `saveProgress` and `saveOnboarding` queue an upsert, flushed every 2.5 s and when the tab is hidden. `logEvent` also queues to `events`. Finishing a project upserts `concepts_learned`.
+- **Pages:**
+  - **`/family`:**
+    - sign in with an emailed link (PKCE);
+    - consent: a plain table of what we keep, plus three checkboxes (parent and 18+, agrees to the notice, optional weekly email);
+    - add a child (first name, no spaces; birth year), with an option to bring over this device's guest progress;
+    - "Who's coding today?" picker;
+    - grown-up controls: weekly email toggle, download all data as JSON, remove a child, sign out, delete the account (type DELETE to confirm).
+  - **`/home`:** the child's greeting, a Continue card, all live projects with step segments, and a "Meet Nix and Riff first" card if the onboarding isn't done.
+  - **`/privacy`:** the plain-language notice and terms, marked as a draft until the Phase 4 legal review. `POLICY_VERSION` is in `family.ts`; bump it and parents are asked to consent again.
+  - **The gate:** with accounts on, guests opening any project except Name Light Show see `ParentGate`.
+  - **Navigation:** the workspace top bar shows the child's name, linking to `/home`. The site nav gains link "04 Family", which shows the child's name when one is active. `startHref()` sends signed-in children to `/home`.
+- **Phase 2 Completion (2026-11-21):**
+  - Platform officially christened **Tinkora**.
+  - **Single active device:** each device maintains a unique ID; logging in on a second device automatically evicts and notifies the first.
+  - **Per-child subscriptions:** Project 1 (Name Light Show) is free for all; projects 2–7 require an active pass for that child. Parent dashboard allows managing passes.
+  - **Expanded Error Translator:** expanded from 26 to 55 kid-language error patterns covering collections, strings, indexing, math domain errors, loop controls, syntax, and simulator attributes.
+  - **Weekly parent email:** Edge function `supabase/functions/weekly-parent-email/index.ts` and runner `scripts/send-weekly-email.py` query weekly concepts learned and progress to send structured parent updates via Brevo API.
+- **Phase 3 Progress (2026-11-21 & 2026-11-22):**
+  - **Step 1 (Database schema):** `supabase/migrations/0003_show_it_off_sharing.sql` added with `published_projects`, `invites`, `reactions` tables, RLS policies, and visitor RPCs (`get_shared_studio`, `post_reaction`).
+  - **Step 2 (Publish flow & child safety):** Created `src/sharing/safety.ts` (scans for phones, emails, PIN codes, schools), `src/sharing/publish.ts`, and `src/sharing/PublishModal.tsx` wired into the workspace header and finish screen. Tested in `src/sharing/safety.test.ts`.
+  - **Step 3 (The Recipient Studio Page):** Created `src/sharing/StudioPage.tsx` and route `/s/:token` using the platform-standard `SiteNav` component, widescreen laptop-first hero layout (fits without scrolling), smart screen rendering (story reader card for text projects, canvas for graphical projects), view mode switcher (Screen / Output / Python Code), live preset compliment reaction buttons, bottom-left "About Tinkora" trigger element, and `noindex` robots meta tag.
+  - **Child Appreciations in /home:** Replaced large inline cheers box with a floating colorful bottom-right notification button (same size as theme toggle) that opens an adjoining ~20% width popover showing family cheers without covering the workspace.
+  - **Global design polish:** Removed numbered prefixes from navbar; unified rounded corners token system across all views.
+  - **Option A (Friday Showcase & WhatsApp Share Generator):** Created `src/sharing/FridayShowcase.tsx` and `showcase.css`. Displays a Friday Showcase banner on `/home`, enables one-tap WhatsApp invitation generation with pre-composed child-celebration text and direct copy, and added Open Graph / WhatsApp unfurl meta tags in `index.html`.
+  - **Option B (Family Appreciation Badges):** Created `src/sharing/badges.ts`, `badges.test.ts`, `AppreciationBadges.tsx`, and `badges.css`. Implemented the social motivation loop that counts distinct family members who cheered the child's creations: **First Fans** (3 people), **Crowd Pleaser** (10 people), and **Family Famous** (25 people). Wired into `/home` and `/family`.
+  - **Option C (Mobile Touch Controls & Input on Stage):** Created `src/stage/TouchControls.tsx` and `touch.css` with a responsive virtual D-Pad and Action buttons dispatching keyboard and touch events. Added an interactive `waiting-for-input` response bar in `StudioPage.tsx` so visitors on phones and laptops can submit text inputs to running Pyodide programs.
+  - **Child Studio Overhaul & Phase 3 Polish (2026-11-22):**
+    - **3D Micro-80 Cyber-Terminal (`MicroTerminal3D.tsx`):** Built an interactive Three.js 3D computing artifact featuring an authentic beveled CRT chassis in obsidian pine, curved phosphor screen, dynamic HTML canvas texture rendering a live Python REPL with typing progression, scanlines and blinking cursor, mechanical keyboard with individual keycaps and golden butter spacebar, floppy drive bay with green activity LED, mouse parallax tilt, full 360° drag-to-inspect orbital rotation, and click-to-type interactivity with audio/haptic pulse.
+    - **Appreciation Badges Visual Overhaul:** Migrated all badge displays to high-res custom artwork (`/badges/first_fans.png`, `/badges/crowd_pleaser.png`, `/badges/family_fav.png`) in `badges.ts`, `badges.css`, `SiteNav.tsx`, and `AppreciationBadgesModal.tsx`.
+    - **Child Studio Navigation & Child Name Gate:** Floating studio navbar restricted to child routes (`/home`, `/progress`, `/learn`) with high-contrast `#0f1f1c` child name on yellow pill, dropdown menu with `ParentGateModal` arithmetic challenge protecting parent settings and logout.
+    - **Share Link SSL Protocol Fix:** Resolved browser HTTPS-upgrading issues on localhost by ensuring `http:` is strictly preserved and providing direct relative preview links.
+  - **Next:** Option D (Level 2 Maker projects from the 26-project catalogue) pending user instructions.
+- **Open legal question for the Phase 4 review:** the DPDP Rules ask for *verifiable* parental consent. Today the account is verified by its email link, and the parent declares that they're an adult. The review must decide whether that's enough, or whether we need an age or identity check (for example DigiLocker-style tokens).

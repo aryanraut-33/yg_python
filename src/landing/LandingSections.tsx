@@ -58,7 +58,7 @@ export function LandingSections({ startHref }: { startHref: string }) {
             {
               n: '1',
               title: 'Meet Nix and Riff',
-              text: 'A short, playful adventure teaches the basics: making Python talk, variables, maths and more. Already know some Python? A quick check lets you skip ahead.',
+              text: 'A short, playful adventure teaches the basics: making Python speak, storing variables, and calculating scores. Already know some Python? A quick check lets you skip ahead.',
               art: (
                 <>
                   <MascotImg who="nix" pose="welcome" />
@@ -69,22 +69,19 @@ export function LandingSections({ startHref }: { startHref: string }) {
             {
               n: '2',
               title: 'Build real projects',
-              text: 'Step-by-step projects, from your name in lights to robots and space missions. Hints when you’re stuck, and error messages that actually make sense.',
+              text: 'Step-by-step projects, from your name in lights to robots and space missions. Hints when you’re stuck, and error messages translated into plain English.',
               art: <MascotImg who="riff" pose="pointing" />,
             },
             {
               n: '3',
               title: 'Show your family',
-              soon: true,
-              text: 'Share what you build with the people you love, and collect their cheers along the way.',
+              text: 'Share what you build with personal family links, and collect their cheers and compliments along the way.',
               art: <MascotImg who="nix" pose="celebrating" />,
             },
           ].map((st, i) => (
             <article key={st.n} className="step" style={{ transitionDelay: `${i * 120}ms` }}>
               <DotNumber value={st.n} cell={11} lit={stepsIn} className="step-num" />
-              <h3>
-                {st.title} {st.soon && <span className="tag-soon">Soon</span>}
-              </h3>
+              <h3>{st.title}</h3>
               <p>{st.text}</p>
               <div className="step-art">{st.art}</div>
             </article>
@@ -98,7 +95,7 @@ export function LandingSections({ startHref }: { startHref: string }) {
           n="02"
           label="Laptop or phone"
           title="Learn on a laptop or a phone"
-          lead="yg python runs in the browser, so there’s nothing to install on either. For the best learning experience, we recommend a laptop or Chromebook."
+          lead="Tinkora runs in the browser, so there’s nothing to install on either. For the best learning experience, we recommend a laptop or Chromebook."
         />
         <div ref={devicesRef} className={`devices${devicesIn ? ' in' : ''}`}>
           <article className="device device-laptop">
@@ -199,7 +196,8 @@ export function LandingSections({ startHref }: { startHref: string }) {
           <ol className="board" aria-label="Featured projects">
             {FEATURED.map((p, i) => {
               const live = Boolean(p.href);
-              const href = live ? startHref : `/projects#${p.id}`;
+              // The starter goes through onboarding first; other live projects open directly.
+              const href = !live ? `/projects#${p.id}` : p.href === '/play/name-light-show' ? startHref : (p.href ?? startHref);
               return (
                 <li key={p.id} className={`board-row${live ? ' is-live' : ''}`}>
                   <a className="board-grid" href={href} onClick={linkClick} onPointerDown={() => buzz(10)}>
@@ -233,10 +231,10 @@ export function LandingSections({ startHref }: { startHref: string }) {
         <SectionHead n="05" id="parents" label="For parents" title="Built for curious kids" lead="Designed for ages 9 to 15." />
         <div className="parents">
           {[
-            ['Private by design', 'No ads and no third-party trackers. Your child’s work is saved on your own device.'],
+            ['Private by design', 'No ads and no third-party trackers. We keep your child’s first name only, stored in India, and you can download or delete it any time.'],
             ['Real skills, step by step', 'Each project teaches one or two new ideas, then asks your child to use them on their own, so the learning sticks.'],
             ['Making, not scrolling', 'Screen time spent creating games, art and tools they’re proud to show you.'],
-            ['Free to start', 'The beginner adventure and the first project are free. No sign-up needed.'],
+            ['Free to start', 'The beginner adventure and Name Light Show need no sign-up. A free family account opens the other projects.'],
           ].map(([h, t], i) => (
             <article key={h}>
               <span className="parent-no">P/{String(i + 1).padStart(2, '0')}</span>
@@ -244,6 +242,14 @@ export function LandingSections({ startHref }: { startHref: string }) {
               <p>{t}</p>
             </article>
           ))}
+        </div>
+        <div className="parents-foot">
+          <a className="mono-link" href="/family" onClick={linkClick}>
+            Set up a free family account →
+          </a>
+          <a className="mono-link" href="/privacy" onClick={linkClick}>
+            Privacy notice
+          </a>
         </div>
       </section>
 
@@ -265,7 +271,7 @@ export function LandingSections({ startHref }: { startHref: string }) {
       </section>
 
       <footer className="lp-footer">
-        <span className="wordmark">yg python</span>
+        <span className="wordmark">Tinkora</span>
         <span>Real Python for kids aged 9–15</span>
         <span>Made with Python, in the browser</span>
       </footer>

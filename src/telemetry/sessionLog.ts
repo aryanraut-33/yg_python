@@ -1,5 +1,7 @@
-// On-device session log for Phase 1 testing. Nothing ever leaves the device:
-// it lives in this browser's localStorage and is read on the hidden /report page.
+// On-device session log for observed sessions: it lives in this browser's localStorage
+// and is read on the hidden /report page. When a family is signed in, the same events
+// also go to the family's own events table (never to a third party).
+import { queueEvent } from '../account/family';
 
 export type LogEventType =
   | 'sandbox_open'
@@ -89,6 +91,7 @@ export function logEvent(type: LogEventType, data?: LogEvent['data']) {
   if (session.events.length >= MAX_EVENTS) return;
   session.events.push({ t: Date.now() - Date.parse(session.startedAt), type, data });
   write(store);
+  queueEvent(type, data);
 }
 
 export function getSessions(): Session[] {

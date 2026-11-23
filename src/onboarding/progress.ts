@@ -1,4 +1,6 @@
-// Onboarding progress, saved on this device only.
+// Onboarding progress. Saved on this device (per child when a family is signed in),
+// and synced to the family's account when there is one.
+import { getActiveChild, queueSync, scopedKey } from '../account/family';
 export type ConceptId = 'print' | 'strings' | 'numbers' | 'variables' | 'math' | 'comments' | 'input';
 export type Experience = 'new' | 'some';
 
@@ -44,13 +46,15 @@ export interface OnboardingState {
   startedAt?: number;
 }
 
-const KEY = 'yg-onboarding-v1';
+const BASE_KEY = 'yg-onboarding-v1';
+const key = () => scopedKey(BASE_KEY);
 
 export function emptyOnboarding(firstScreen: string): OnboardingState {
   return {
     screen: firstScreen,
     done: [],
-    name: '',
+    // A signed-in child is already known by their first name.
+    name: getActiveChild()?.firstName ?? '',
     experience: null,
     score: null,
     total: null,
@@ -64,11 +68,12 @@ export function emptyOnboarding(firstScreen: string): OnboardingState {
 
 export function loadOnboarding(firstScreen: string): OnboardingState {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(key());
     if (raw) {
       const s = { ...emptyOnboarding(firstScreen), ...(JSON.parse(raw) as Partial<OnboardingState>) };
       // Older saves used "little"/"lots".
       if (s.experience && s.experience !== 'new' && s.experience !== 'some') s.experience = 'some';
+      if (!s.name) s.name = getActiveChild()?.firstName ?? '';
       return s;
     }
   } catch {
@@ -79,15 +84,16 @@ export function loadOnboarding(firstScreen: string): OnboardingState {
 
 export function saveOnboarding(state: OnboardingState) {
   try {
-    localStorage.setItem(KEY, JSON.stringify(state));
+    localStorage.setItem(key(), JSON.stringify(state));
   } catch {
     // Storage blocked: progress lasts for this visit only.
   }
+  queueSync('onboarding', state);
 }
 
 export function clearOnboarding() {
   try {
-    localStorage.removeItem(KEY);
+    localStorage.removeItem(key());
   } catch {
     // ignore
   }
@@ -96,7 +102,7 @@ export function clearOnboarding() {
 /** Has this child finished (or chosen to skip) the onboarding? */
 export function onboardingCompleted(): boolean {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(key());
     return raw ? Boolean((JSON.parse(raw) as Partial<OnboardingState>).completed) : false;
   } catch {
     return false;

@@ -1,4 +1,6 @@
-// Guest progress for a project, saved on this device only (no account in Phase 1).
+// Progress for a project. Saved on this device (per child when a family is signed in),
+// and synced to the family's account when there is one.
+import { queueSync, scopedKey } from '../account/family';
 
 export interface Progress {
   /** -1 = intro screen, steps.length = finished */
@@ -16,9 +18,13 @@ export interface Progress {
   seenIntros?: string[];
   /** Code in free-play mode after finishing. */
   freeCode?: string;
+  /** When this was last saved (ms since epoch), for the Continue card. */
+  updatedAt?: number;
 }
 
-const key = (projectId: string) => `yg-progress-${projectId}`;
+/** The localStorage key for a project's progress (namespaced by the active child). */
+export const progressKey = (projectId: string) => scopedKey(`yg-progress-${projectId}`);
+const key = progressKey;
 
 export function emptyProgress(): Progress {
   return { stepIndex: -1, done: [], code: {}, startCode: {}, remembered: {}, predictions: {}, hintsShown: {} };
@@ -35,11 +41,13 @@ export function loadProgress(projectId: string): Progress {
 }
 
 export function saveProgress(projectId: string, progress: Progress) {
+  const stamped = { ...progress, updatedAt: Date.now() };
   try {
-    localStorage.setItem(key(projectId), JSON.stringify(progress));
+    localStorage.setItem(key(projectId), JSON.stringify(stamped));
   } catch {
     // Storage blocked: progress lasts only for this visit.
   }
+  queueSync(projectId, stamped);
 }
 
 export function clearProgress(projectId: string) {

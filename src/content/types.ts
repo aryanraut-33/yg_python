@@ -94,12 +94,57 @@ export interface ProjectManifest {
   phoneFriendly: boolean;
   /** Draft projects are hidden from children. */
   draft?: boolean;
+  /** Kid-facing words around the project (intro and finish screens). */
+  words?: ProjectWords;
   files: {
     starter: string;
     solution: string;
+    /** Optional demo for the intro screen, for projects whose solution waits for typing. */
+    preview?: string;
   };
   milestones: Milestone[];
 }
+
+export interface ProjectWords {
+  /** Intro lead: what they'll make, e.g. "In about 10 minutes, you'll write real Python that…". Markdown. */
+  intro: string;
+  /** Finish lead, e.g. "Every line of that light show is your own Python." */
+  finished: string;
+  /** Button that re-runs their finished program, e.g. "Watch my light show". */
+  replay: string;
+  /** Keep-tinkering ideas after finishing. */
+  tinker: string;
+}
+
+/** Display names for concept ids, shown as chips on the finish screen. */
+export const CONCEPT_NAMES: Record<string, string> = {
+  'function-calls': 'Commands',
+  coordinates: 'x and y',
+  variables: 'Variables',
+  strings: 'Text (strings)',
+  'for-loops': 'For loops',
+  range: 'range()',
+  'counting-down': 'Counting down',
+  wait: 'Waiting',
+  'if-else': 'if and else',
+  comparisons: 'Comparing',
+  turtle: 'Turtle drawing',
+  angles: 'Angles',
+  'changing-variables': 'Changing variables',
+  lists: 'Lists',
+  random: 'Random',
+  input: 'input()',
+  'int-conversion': 'Text to numbers',
+  'while-loops': 'While loops',
+  elif: 'elif',
+  counters: 'Counters',
+  'f-strings': 'f-strings',
+  functions: 'Functions',
+  'sum-len': 'sum() and len()',
+  arithmetic: 'Maths',
+  charts: 'Charts',
+  sequences: 'Steps in order',
+};
 
 export interface LoadedProject {
   manifest: ProjectManifest;

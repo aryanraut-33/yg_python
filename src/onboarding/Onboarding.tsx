@@ -88,7 +88,7 @@ export function Onboarding() {
     <div className="ob">
       <header className="ob-top">
         <a className="wordmark" href="/" onClick={linkClick}>
-          yg python
+          Tinkora
         </a>
         <ChapterMap chapters={chapters} current={screen.chapter} />
         <div className="ob-top-right">

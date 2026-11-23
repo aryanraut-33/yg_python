@@ -106,7 +106,7 @@ export function Playground() {
       <header className="topbar">
         <div className="brand">
           <a className="wordmark" href="/" onClick={linkClick} style={{ color: 'inherit', textDecoration: 'none' }}>
-            yg python
+            Tinkora
           </a>
           <span className="tag">Developer playground</span>
         </div>

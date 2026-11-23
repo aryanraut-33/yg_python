@@ -42,7 +42,7 @@
   flex-direction: column;
   gap: 4px;
   padding: 18px 20px;
-  border-radius: 0;
+  border-radius: var(--radius-md);
   background: var(--surface);
   border: 1px solid var(--line);
 }
@@ -70,14 +70,14 @@
 .report-empty {
   padding: 24px;
   border: 1px dashed var(--line);
-  border-radius: 0;
+  border-radius: var(--radius-md);
   color: var(--text-soft);
 }
 
 .report-table-wrap {
   overflow-x: auto;
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--radius-md);
 }
 
 .report-table {
@@ -124,7 +124,7 @@
 .tag-now {
   margin-left: 8px;
   padding: 1px 8px;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   background: var(--accent);
   color: var(--primary-fg);
   font-size: 11px;

@@ -11,3 +11,13 @@ assets/mascot/**/*.zip
 assets/mascot/nix/yg_python_mascots/
 assets/mascot/riff/yg_python_tiger_mascots/
 /image.png
+
+# Local secrets and keys (never commit)
+.env
+.env.local
+.env.*.local
+
+# Agent workspace tooling
+.agents/
+skills-lock.json
+

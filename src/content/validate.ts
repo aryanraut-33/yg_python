@@ -54,6 +54,7 @@ export function validateProject(raw: unknown, files: Record<string, string>, fol
   else {
     fileRef(p.files.starter, 'files.starter');
     fileRef(p.files.solution, 'files.solution');
+    if (p.files.preview !== undefined) fileRef(p.files.preview, 'files.preview');
   }
 
   if (!Array.isArray(p.milestones) || p.milestones.length === 0) {

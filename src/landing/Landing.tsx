@@ -5,7 +5,8 @@ import { linkClick } from '../router';
 import { getRunner } from '../runtime/runnerHub';
 import { LandingSections } from './LandingSections';
 import { buzz, useThemeValue } from '../ui/fx';
-import { SiteNav, startHref as getStartHref } from '../ui/SiteNav';
+import { HOME_HERO_EVENT, SiteNav, startHref as getStartHref } from '../ui/SiteNav';
+import { FloatingCta } from '../ui/FloatingCta';
 import './scenes.css';
 import './landing.css';
 
@@ -63,6 +64,13 @@ export function Landing() {
     [index],
   );
 
+  // The wordmark brings the visitor back to the intro slide, not whichever project is showing.
+  useEffect(() => {
+    const on = () => goTo(0, 'prev');
+    window.addEventListener(HOME_HERO_EVENT, on);
+    return () => window.removeEventListener(HOME_HERO_EVENT, on);
+  }, [goTo]);
+
   const autoAdvance = !userPaused && !hovered && !focused && !tabHidden && !reduced;
 
   useEffect(() => {
@@ -102,12 +110,12 @@ export function Landing() {
 
   return (
     <div className="landing">
-      <SiteNav onHome />
+      <SiteNav onHome hero=".hero" />
 
       <section
         className={`hero${userPaused ? ' is-paused' : ''}${reduced ? ' is-reduced' : ''}`}
         aria-roledescription="carousel"
-        aria-label="yg python and some projects kids build"
+        aria-label="Tinkora and some projects kids build"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onFocus={() => setFocused(true)}
@@ -136,7 +144,7 @@ export function Landing() {
                 className={`slide ${stateOf(i)}`}
                 role="group"
                 aria-roledescription="slide"
-                aria-label={intro ? 'About yg python' : s.name}
+                aria-label={intro ? 'About Tinkora' : s.name}
                 aria-hidden={!active}
                 onAnimationEnd={(e) => {
                   if (i === move.from && i !== index && e.target === e.currentTarget) setMove((m) => ({ ...m, from: null }));
@@ -169,7 +177,7 @@ export function Landing() {
                     ) : (
                       <span className={`status-led${s.href ? ' is-live' : ''}`}>
                         <span className="led" aria-hidden="true" />
-                        {s.href ? 'Your first project' : 'Coming soon'}
+                        {s.href ? (s.key === 'lights' ? 'Your first project' : 'Ready to build') : 'Coming soon'}
                       </span>
                     )}
                   </div>
@@ -208,6 +216,7 @@ export function Landing() {
       </section>
 
       <LandingSections startHref={startHref} />
+      <FloatingCta href={startHref} after=".hero" until=".cta" />
     </div>
   );
 }

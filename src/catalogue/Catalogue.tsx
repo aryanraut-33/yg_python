@@ -1,12 +1,34 @@
 // /projects: every project, grouped by level, in the LED-board style.
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CATALOGUE } from './data';
 import type { CatalogueProject } from './types';
 import { SiteNav, startHref as getStartHref } from '../ui/SiteNav';
+import { FloatingCta } from '../ui/FloatingCta';
 import { DotNumber, buzz, useInView } from '../ui/fx';
 import { RichText } from '../ui/RichText';
 import { linkClick } from '../router';
 import './catalogue.css';
+
+/** True while a sticky element is pinned, so it can cover the strip above it. */
+function useStuck<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  const [stuck, setStuck] = useState(false);
+  useEffect(() => {
+    const on = () => {
+      const el = ref.current;
+      if (!el || getComputedStyle(el).position !== 'sticky') return setStuck(false);
+      setStuck(el.getBoundingClientRect().top <= parseFloat(getComputedStyle(el).top) + 1);
+    };
+    on();
+    window.addEventListener('scroll', on, { passive: true });
+    window.addEventListener('resize', on);
+    return () => {
+      window.removeEventListener('scroll', on);
+      window.removeEventListener('resize', on);
+    };
+  }, []);
+  return [ref, stuck] as const;
+}
 
 const LEVELS = [
   {
@@ -44,6 +66,7 @@ export function Catalogue() {
   const [open, setOpen] = useState<string[]>([]);
   const [flash, setFlash] = useState<string | null>(null);
   const start = useMemo(getStartHref, []);
+  const [filtersRef, filtersStuck] = useStuck<HTMLDivElement>();
 
   // /projects#doodle-guesser opens and highlights that project.
   useEffect(() => {
@@ -97,7 +120,7 @@ export function Catalogue() {
         </dl>
       </header>
 
-      <div className="cat-filters" role="search">
+      <div ref={filtersRef} className={`cat-filters${filtersStuck ? ' is-stuck' : ''}`} role="search">
         <div className="seg" role="group" aria-label="Level">
           <button className={level === 'all' ? 'on' : ''} aria-pressed={level === 'all'} onClick={() => setLevel('all')}>
             All
@@ -160,6 +183,7 @@ export function Catalogue() {
           Start learning free <span aria-hidden="true">→</span>
         </a>
       </footer>
+      <FloatingCta href={start} after=".cat-head" until=".cat-foot" />
     </div>
   );
 }
@@ -270,7 +294,12 @@ function Tile({ p, open, flash, start, onToggle }: { p: CatalogueProject; open: 
           {open ? 'Less −' : 'Details +'}
         </button>
         {live && (
-          <a className="led-btn led-btn-sm" href={start} onClick={linkClick} onPointerDown={() => buzz(12)}>
+          <a
+            className="led-btn led-btn-sm"
+            href={p.href === '/play/name-light-show' ? start : (p.href ?? start)}
+            onClick={linkClick}
+            onPointerDown={() => buzz(12)}
+          >
             Build it now <span aria-hidden="true">→</span>
           </a>
         )}
